@@ -1,2 +1,2 @@
-# hidap
-repository which conects all the hidap modules
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->

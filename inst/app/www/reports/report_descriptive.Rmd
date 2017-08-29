@@ -1,0 +1,50 @@
+---
+title: "Descriptive report: trial `r params$meta$title`"
+author: '`r params$author`'
+date: '`r format(Sys.time(), "%B %d, %Y, %H:%Mh")`'
+output: 
+  html_document:
+    theme: united
+  pdf_document:
+    toc: true
+    highlight: zenburn
+  word_document:
+    highlight: "tango"
+params: 
+  meta: "no data"
+  trait: "no data"
+  treat: "no data"
+  rep: "no data"
+  data: "no data"
+  maxp: "no data"
+  author: "no data"
+
+---
+
+
+```{r, echo=FALSE}
+
+fb = params$data
+tr = params$trait
+gt = params$treat
+rp = params$rep
+au = params$author
+mp = params$maxp
+meta = params$meta
+
+#fb$CODE <- as.factor(fb$CODE)
+
+```
+
+The trait variable(s) is/are **`r paste(tr, collapse = ", ")`**; the genotype factor is **`r gt`**.
+The replication factor is **`r rp`**.
+
+Summary of traits:
+
+```{r, echo=FALSE, comment = NA, results = 'asis'}
+DF <- summary(fb[, tr]) 
+pander::pandoc.table(DF, justify = "llll")
+```
+
+
+
