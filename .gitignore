@@ -8,6 +8,10 @@
 # Example code in package build process
 *-Ex.R
 
+#Avoid remotes files
+remotes_description.R
+
+
 # Output files from R CMD build
 /*.tar.gz
 

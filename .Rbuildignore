@@ -6,3 +6,6 @@
 
 ^README\.Rmd$
 ^README-.*\.png$
+
+# R files for updating and infrastructure
+build_cipriu_infrastructure.R
