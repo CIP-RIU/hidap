@@ -3,7 +3,7 @@
 library(data.table)
 #library(shinyTree)
 
-library(doBy)
+#library(doBy)
 library(tidyr)
 library(DT)
 library(brapi)
@@ -14,28 +14,27 @@ library(openxlsx)
 #library(fbmet)
 #library(fbhelp)
 #library(fbdesign)
-library(rhandsontable)
+#library(rhandsontable)
 library(shinydashboard)
-library(date)
+#library(date)
 
 library(purrr)
-library(shinyURL)
-library(qtlcharts)
-library(leaflet)
-library(withr)
-library(dplyr)
+#library(shinyURL)
+#library(qtlcharts)
+#library(leaflet)
+#library(withr)
 library(st4gi)
 library(tibble)
 library(knitr)
 library(readxl)
-library(countrycode)
+#library(countrycode)
 #library(fbsites)
 #library(fbmlist)
 #library(fbmet)
 
 #library(fbcheck)
 #library(fbmlist)
-library(countrycode)
+#library(countrycode)
 #library(shinyjs)
 library(DBI)
 library(RMySQL)
@@ -52,11 +51,11 @@ library(fbanalysis)
 library(pepa)
 library(shinyFiles)
 library(rlist)
-library(rprojroot)
-library(factoextra)
-library(ggrepel)
+#library(rprojroot)
+#library(factoextra)
+#library(ggrepel)
 
-library(fbdocs)
+#library(fbdocs)
 #library(geneticdsg)
 
 #package fbupdate
@@ -64,6 +63,20 @@ library(fbdocs)
 #library(fbupdate)
 library(tibble)
 library(shinyjs)
+library(brapi)
+
+
+library(ggplot2)
+#library(st4gi)
+#library(pepa)
+library(readxl)
+library(eda4plant)
+library(st4gi)
+library(GGally)
+library(ggrepel)
+library(brapi)
+library(dplyr)
+
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
@@ -91,7 +104,7 @@ ui <- dashboardPage(
                    sidebarMenu(
                      id = "tabs",
                      # menuItem("Phenotype tool", icon = icon("th-list"),
-                     menuItem("Phenotype", icon = icon("th-list"),
+                     menuItem("Data Analysis", icon = icon("th-list"),
                               
                               # menuItem("Material Management",
                               #          menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
@@ -110,7 +123,7 @@ ui <- dashboardPage(
                               
                               menuItem("Single Trial Analysis",
                                        #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
+                                       menuSubItem("Single report", tabName = "singleAnalysisReport_sbase", icon = icon("file-text-o"))#,
                                        #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
                                        
                                        #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
@@ -123,8 +136,14 @@ ui <- dashboardPage(
                               # 
                               menuItem("MET Analysis",
                                        #menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
-                                       menuSubItem("MET report", tabName = "metAnalysisReport",icon = icon("file-text-o"))#,
+                                       menuSubItem("MET report", tabName = "metAnalysisReport_sbase",icon = icon("file-text-o"))#,
                               ),
+                              
+                              menuItem("Graph",
+                                       #menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
+                                       menuSubItem("Exploratory Graphics", tabName = "edaGraph_sbase",icon = icon("file-text-o"))#,
+                              ),
+                              
                               
                               menuItem("Index Selection",
                                        menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
@@ -139,9 +158,9 @@ ui <- dashboardPage(
                      #          menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
                      # ),
                      
-                     menuItem("Documentation",  icon = icon("book"),
-                              menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
-                     ),
+                     # menuItem("Documentation",  icon = icon("book"),
+                     #          menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
+                     # ),
                      
                      # menuItem("Help",  icon = icon("refresh"),
                      #          menuSubItem("Check updates", tabName = "updateHidap",icon = icon("refresh"))#,
@@ -257,7 +276,7 @@ ui <- dashboardPage(
       #fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
       
       # Data Transformation
-      fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
+      #fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
       
       
       # Material List Module ----------------------------------------------------
@@ -272,22 +291,26 @@ ui <- dashboardPage(
       
       
       
-      fbanalysis::single_ui(name="singleAnalysisReport"),
+      #fbanalysis::single_ui(name="singleAnalysisReport"),
+      
+      
+      fbanalysis::single_sbase_ui(name="singleAnalysisReport_sbase"),
       #fbanalysis::genetic_ui(name="geneticAnalysisReport"),
-      
-      
-      fbanalysis::met_ui(name="metAnalysisReport"),
-      fbmet::met_ui("metAnalysisGraphs"),
+      fbanalysis::met_sbase_ui(name="metAnalysisReport_sbase"),
+      #fbanalysis::met_ui(name="metAnalysisReport"),
+      #fbmet::met_ui("metAnalysisGraphs"),
       
       
       # fbsites::addsite_ui(name = "trialSites"),
       # fbsites::ui_site(name ="trialSitesTable"),
       # 
       
-      fbanalysis::elston_ui(name="elstonIndex"),
-      fbanalysis::ui_pvs(name = "singlePVS"),
+      eda4plant::edaplant_sbase_ui(name = "edaGraph_sbase"),
       
-      fbdocs::fbdocs_ui(name = "docHidap") ,
+      fbanalysis::elston_ui(name="elstonIndex"),
+      #fbanalysis::ui_pvs(name = "singlePVS"),
+      
+      #fbdocs::fbdocs_ui(name = "docHidap") ,
       
       #Hidap Update Module
       # fbupdate::fbupdate_ui(name = "updateHidap"),
@@ -321,7 +344,6 @@ ui <- dashboardPage(
         )
       )
     )
-    
   )
 )
 
@@ -355,19 +377,22 @@ sv <- function(input, output, session) ({
   #fbdesign::server_design(input, output, session, values)
   #fbdesign::server_design_big(input, output, session, values)
   #fbopenbooks::fbopenbooks_server(input, output, session, values)
-  fbanalysis::single_server(input, output, session, values)
+  fbanalysis::single_server_base(input, output, session, values)
   #fbanalysis::dtr_server(input, output, session, values)
   
-  fbanalysis::met_server(input, output, session, values)
+  fbanalysis::met_server_sbase(input, output, session, values)
   
   fbanalysis::elston_server(input, output, session, values)
-  fbanalysis::pbaker_server(input, output, session, values)
+  #fbanalysis::pbaker_server(input, output, session, values)
+  
+  
+  eda4plant::edaplant_sbase_server(input,output, session ,values)
   
   #fbanalysis::pvs_server(input, output, session, values)
   #fbanalysis::genetic_server(input, output, session, values)
   #fbanalysis::pvs_anova_server(input, output, session, values)
   
-  fbdocs::fbdocs_server(input, output, session, values)
+  #fbdocs::fbdocs_server(input, output, session, values)
   
   #fbupdate::fbupdate_server(input, output, session, values = values)
   #fbsites::server_addsite(input, output, session, values = values)
@@ -376,7 +401,7 @@ sv <- function(input, output, session) ({
   #brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
   #fbmet::met_sv(input, output, session, values)
-  #brapps::rts_sv(input, output, session, values)
+  brapps::rts_sv(input, output, session, values)
   
   # drat::addRepo("c5sire")
   # res = eventReactive(input$about_update, {
