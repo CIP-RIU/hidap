@@ -97,7 +97,7 @@ ui <- dashboardPage(
                                        menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
                                        menuSubItem("Clone list", tabName = "generateList", icon = icon("list")),
                                        menuSubItem("Family list", tabName = "createList", icon = icon("list-alt")) ,
-                                       #menuSubItem("Parental list", tabName = "parentList", icon = icon("list-alt")),
+                                       menuSubItem("Parental list", tabName = "parentList", icon = icon("list-alt")),
                                        menuSubItem("Distribution Data", tabName = "distributionDB", icon = icon("database"))
                               ),
 
@@ -110,8 +110,8 @@ ui <- dashboardPage(
 
                               menuItem("Single Trial Analysis",
                                        #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
-                                       #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
+                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
+                                       menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
 
                                        #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
@@ -135,8 +135,8 @@ ui <- dashboardPage(
                      ),
 
                      menuItem("Geographic Information", icon = icon("globe"),
-                              menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
-                              menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
+                              menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o")),
+                              menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow"))
                               ),
 
                      menuItem("Documentation",  icon = icon("book"),
@@ -260,19 +260,17 @@ ui <- dashboardPage(
       fbmlist::generate_ui(name = "generateList"),
       fbmlist::managerlist_ui(name = "manageList"),
       fbmlist::createlist_ui(name = "createList"),
-      #fbmlist::parent_ui(name = "parentList"),
+      fbmlist::parent_ui(name = "parentList"),
       fbmlist::distribution_ui(name = "distributionDB"),
 
       #brapps::fbasingle_ui("SingleChart"),
 
-
-
       fbanalysis::single_ui(name="singleAnalysisReport"),
-      #fbanalysis::genetic_ui(name="geneticAnalysisReport"),
+      fbanalysis::genetic_ui(name="geneticAnalysisReport"),
 
 
       fbanalysis::met_ui(name="metAnalysisReport"),
-      fbmet::met_ui("metAnalysisGraphs"),
+      #fbmet::met_ui("metAnalysisGraphs"),
 
 
       fbsites::addsite_ui(name = "trialSites"),
@@ -285,21 +283,21 @@ ui <- dashboardPage(
       fbdocs::fbdocs_ui(name = "docHidap") ,
 
       #Hidap Update Module
-      fbupdate::fbupdate_ui(name = "updateHidap"),
+      fbupdate::fbupdate_ui(name = "updateHidap")#,
       
-      
-      #fbmlist::parent_ui(name = "parentList"),
+      #
+
 
       #fbanalysis::pbaker_ui(name="pesekIndex"),
 
-      brapps::rts_ui("selResponse"),
+      #brapps::rts_ui("selResponse"),
 
-      tabItem(tabName = "analysis",
-              h2("Analysis"),
-              p(class = "text-muted",
-                paste("Under construction...")
-              )
-      )
+      # tabItem(tabName = "analysis",
+      #         h2("Analysis"),
+      #         p(class = "text-muted",
+      #           paste("Under construction...")
+      #         )
+      # )
     ) , #end of TabSetPanel
 
     tags$div(
@@ -344,7 +342,7 @@ sv <- function(input, output, session) ({
   fbmlist::server_managerlist(input, output, session, values)
   fbmlist::server_generate(input, output, session, values)
   fbmlist::server_createlist(input, output, session, values)
-  #fbmlist::server_parentlist(input, output, session, values)
+  fbmlist::server_parentlist(input, output, session, values)
   fbmlist::server_distribution(input,output,session, values)
 
   fbdesign::server_design(input, output, session, values)
@@ -364,10 +362,10 @@ sv <- function(input, output, session) ({
 
   fbdocs::fbdocs_server(input, output, session, values)
 
-  fbupdate::fbupdate_server(input, output, session, values = values)
   fbsites::server_addsite(input, output, session, values = values)
   fbsites::server_site(input, output, session, values = values)
 
+  fbupdate::fbupdate_server(input, output, session, values = values)
   #brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
   #fbmet::met_sv(input, output, session, values)
