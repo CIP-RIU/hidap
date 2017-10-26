@@ -307,7 +307,7 @@ ui <- dashboardPage(
       
       eda4plant::edaplant_sbase_ui(name = "edaGraph_sbase"),
       
-      fbanalysis::elston_ui(name="elstonIndex"),
+      fbanalysis::elston_ui_sbase(name="elstonIndex"),
       #fbanalysis::ui_pvs(name = "singlePVS"),
       
       #fbdocs::fbdocs_ui(name = "docHidap") ,
@@ -382,7 +382,7 @@ sv <- function(input, output, session) ({
   
   fbanalysis::met_server_sbase(input, output, session, values)
   
-  fbanalysis::elston_server(input, output, session, values)
+  fbanalysis::elston_server_sbase(input, output, session, values)
   #fbanalysis::pbaker_server(input, output, session, values)
   
   
