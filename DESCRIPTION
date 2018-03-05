@@ -1,14 +1,18 @@
 Package: hidap
 Title: High Interactive Data Analysis Platform for Plant breeding
-Version: 1.0.6
+Version: 1.0.9
 Authors@R: c(
-           person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
-           person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
+
+           person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("aut","cre")),
            person("Ivan", "Perez", email = "i.perez@cgiar.org", role = c("ctr")),
-           person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
-           person("Luka", "Wanjohi", email = "l.wanjohi@cgiar.org", role = c("ctr")),
+           person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
+           person("Román", "Arias", email = "r.arias@cgiar.org", role = c("ctr")),
+           person("Ciro", "Hualla", email = "c.rosales@cgiar.org", role = c("ctr")),           
+           person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("ctr")),
            person("Vilma", "Hualla", email = "v.hualla@cgiar.org", role = c("ctr")),
-           person("Elisa", "Salas", email = "e.salas@cgiar.org", role = c("ctr"))
+           person("Elisa", "Salas", email = "e.salas@cgiar.org", role = c("ctr")),
+           person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("ctr")),
+           person("International Potato Center", "CIP", email = "CIP-RIU@cgiar.org", role = c("cph"))
   )
 Author: Omar Benites <o.benites@cgiar.org>
 Maintainer: Omar Benites <o.benites@cgiar.org>
@@ -21,6 +25,8 @@ Imports:
     agricolae,
     shiny
 Suggests:
-    knitr
+     testthat,
+     knitr,
+     rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
