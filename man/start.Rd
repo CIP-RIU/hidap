@@ -12,3 +12,4 @@ Starting HIDAP (a shiny application)
 \author{
 Reinhard Simon
 }
+
