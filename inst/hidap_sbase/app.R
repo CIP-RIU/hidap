@@ -121,6 +121,12 @@ ui <- dashboardPage(
                               #          menuSubItem("Data transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               # ),
                               
+                              menuItem("Data Exploration",
+                                       #menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
+                                       menuSubItem("Graphics", tabName = "edaGraph_sbase",icon = icon("file-text-o"))#,
+                              ),
+                              
+                              
                               menuItem("Single Trial Analysis",
                                        #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
                                        menuSubItem("Single report", tabName = "singleAnalysisReport_sbase", icon = icon("file-text-o"))#,
@@ -139,12 +145,7 @@ ui <- dashboardPage(
                                        menuSubItem("MET report", tabName = "metAnalysisReport_sbase",icon = icon("file-text-o"))#,
                               ),
                               
-                              menuItem("Graph",
-                                       #menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
-                                       menuSubItem("Exploratory Graphics", tabName = "edaGraph_sbase",icon = icon("file-text-o"))#,
-                              ),
-                              
-                              
+                             
                               menuItem("Index Selection",
                                        menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
                                        #menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
