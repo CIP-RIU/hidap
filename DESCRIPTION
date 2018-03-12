@@ -2,13 +2,11 @@ Package: hidap
 Title: High Interactive Data Analysis Platform for Plant breeding
 Version: 1.0.9
 Authors@R: c(
-
            person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("aut","cre")),
            person("Ivan", "Perez", email = "i.perez@cgiar.org", role = c("ctr")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
            person("Román", "Arias", email = "r.arias@cgiar.org", role = c("ctr")),
-           person("Ciro", "Hualla", email = "c.rosales@cgiar.org", role = c("ctr")),           
-           person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("ctr")),
+           person("Ciro", "Rosales", email = "c.rosales@cgiar.org", role = c("ctr")),           
            person("Vilma", "Hualla", email = "v.hualla@cgiar.org", role = c("ctr")),
            person("Elisa", "Salas", email = "e.salas@cgiar.org", role = c("ctr")),
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("ctr")),
@@ -28,5 +26,6 @@ Suggests:
      testthat,
      knitr,
      rmarkdown
+Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

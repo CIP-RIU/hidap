@@ -12,4 +12,3 @@ hidap_update
 \author{
 Reinhard Simon
 }
-

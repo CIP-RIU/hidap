@@ -11,7 +11,7 @@ library(brapps)
 library(agricolae)
 library(dplyr)
 library(openxlsx)
-library(fbmet)
+#library(fbmet)
 library(fbhelp)
 library(fbdesign)
 library(rhandsontable)
@@ -31,13 +31,13 @@ library(readxl)
 library(countrycode)
 library(fbsites)
 library(fbmlist)
-library(fbmet)
+#library(fbmet)
 
 library(fbcheck)
 library(fbmlist)
 library(shinyjs)
 library(DBI)
-library(RMySQL)
+#library(RMySQL)
 library(spsurvey)
 library(foreign)
 library(tools)
@@ -62,7 +62,6 @@ library(remotes)
 library(fbupdate)
 library(tibble)
 #library(shinyjs)
-
 library(shinyalert)
 
 
@@ -80,6 +79,10 @@ library(bsplus) #hidapnetwork
 library(htmltools) #hidapnetwork
 #library(hidapNetwork)
 
+#package for exploratory data analysis
+library(eda4plant)
+library(GGally)
+library(ggplot2)
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 
@@ -124,6 +127,7 @@ ui <- dashboardPage(
                               menuItem("Fieldbook management",
                                        menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
                                        menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
+                                       menuSubItem("Exploratory analysis", tabName = "edaFieldbook", icon = icon("bar-chart-o")),
                                        menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser")),
                                        menuSubItem("Data transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
@@ -151,9 +155,7 @@ ui <- dashboardPage(
                                        #menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
                                        menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent")),
                                        menuSubItem("Drought indexes", tabName = "droughtIndex",icon = icon("indent"))
-                                       
-                                       
-                              )#,
+                                       )#,
 
                      ),
 
@@ -185,6 +187,9 @@ ui <- dashboardPage(
     #   tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
     # ),
 
+  
+    
+    
     includeCSS("www/custom.css"),
 
     tabItems(
@@ -299,10 +304,13 @@ ui <- dashboardPage(
       # ),
       #Fin codigo Ivan Perez
       ###
-
+      
       # Design Experiments Module ----------------------------------------------------
       fbdesign::ui_fieldbook(name = "newFieldbook"),
 
+      # Exploratory Graphics
+      eda4plant:::edaplant_ui(name = "edaFieldbook"),
+      
       # Data Quality and Check Fieldbook Module  ----------------------------------------------------
       fbcheck::fbcheck_ui(name= "checkFieldbook"),
 
@@ -343,10 +351,11 @@ ui <- dashboardPage(
       fbdocs::fbdocs_ui(name = "docHidap") ,
 
       #Hidap Update Module
-      fbupdate::fbupdate_ui(name = "updateHidap")#,
+      fbupdate::fbupdate_ui(name = "updateHidap")
       
       #
-
+     
+      
 
       #fbanalysis::pbaker_ui(name="pesekIndex"),
 
@@ -385,7 +394,7 @@ ui <- dashboardPage(
 
 sv <- function(input, output, session) ({
 
-  values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
+  #values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
   #
   #
@@ -394,14 +403,20 @@ sv <- function(input, output, session) ({
   #             80, "rsimon16",
   #             "sweetpotato")
   #   })
-
+  values = shiny::reactiveValues()
   #shinyURL.server()
 
   withProgress(message = 'Loading HiDAP', value = 0, {
 
     incProgress(1/25, detail = paste("..."))
-      
+
+ 
+          
   fbcheck::fbcheck_server(input, output, session, values)    
+  
+  eda4plant::edaplant_server(input, output, session, values) 
+
+  
   
   fbmlist::server_managerlist(input, output, session, values)
   fbmlist::server_generate(input, output, session, values)
@@ -443,7 +458,7 @@ sv <- function(input, output, session) ({
   fbanalysis::pvs_anova_server(input, output, session, values)
 
   
-    incProgress(9/25, detail = paste("..."))
+   incProgress(9/25, detail = paste("..."))
   
   fbdocs::fbdocs_server(input, output, session, values)
 
@@ -736,14 +751,14 @@ sv <- function(input, output, session) ({
     validObs <- validateInput(observation)
 
     if(!as.logical(validObs[1])){
-      showModal(modalDialog(title = "HiDAP Network", HTML(validObs[2])))
+      showModal(modalDialog(title = "HiDAP network", HTML(validObs[2])))
       return()
     }
 
     filesToShare  <- input$tabFilesToShare_rows_selected
 
     if (filesToShare < 1 || numUser < 1){
-      showModal(modalDialog(title = "HiDAP Network", HTML("Users or files are not selected.")))
+      showModal(modalDialog(title = "HiDAP network", HTML("Users or files are not selected.")))
       return()
     }
 
