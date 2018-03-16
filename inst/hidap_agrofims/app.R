@@ -91,9 +91,15 @@ library(tibble)
 # into HiDAP working dir by installer
 #Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
 
+allowedCharactersMail  <- "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.-@+"
+constUserDB <- "hidap_network"
+constPassDB <- "cfmdslmSDF#USa0817"
+constDBName <- "hidap_network"
+constDBHost <- "176.34.248.121"
+
 
 ui <- dashboardPage(
-  skin = "yellow",
+  skin = "green",
   dashboardHeader(title = "HiDAP", titleWidth = "250px"
                   #tags$script(HTML("$('body').addClass('sidebar-mini');"))
   ),#end Header
@@ -102,6 +108,8 @@ ui <- dashboardPage(
                    #div(style="margin-right: auto;",img(src = "Logo1.png", width = "250")),
                    br(),
                    div(img(src="hidapicon.png", width = "150px"), style="text-align: center;"),
+                   br(),
+                   div(uiOutput("userLoggedText"), style="text-align: center;"),
 
                    #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
                    sidebarMenuOutput("menu"),#from hidap network
@@ -351,15 +359,122 @@ ui <- dashboardPage(
 )
 
 
-
-
 ############################################################
 
 sv <- function(input, output, session) ({
 
+  USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL)
+
+  # modal to show when app is launched
+  showModal(modalDialog(
+    title = HTML(" <center>  Welcome to HiDAP-AGROFIMS <center/>"),
+    HTML("You can use the open version or log in and use all characteristics of HiDAP-AGROFIMS. <br> Registration is free"),
+    easyClose = FALSE,
+    footer = tagList(
+      modalButton("Continue with Open Version"),
+      actionButton("login", "Log in or Register")
+    )
+  ))
+
+
+
+  # modal to show to user to login or register
+  observeEvent(input$login, {
+    showModal(loginModal())
+  })
+
+  observeEvent(input$goBackModal, {
+    showModal(modalDialog(
+      title = HTML(" <center>  Welcome to HiDAP-AGROFIMS <center/>"),
+      HTML("You can use the open version or log in and use all characteristics of HiDAP-AGROFIMS. <br> Registration is free"),
+      easyClose = FALSE,
+      footer = tagList(
+        modalButton("Continue with Open Version"),
+        actionButton("login", "Log in or Register")
+      )
+    ))
+  })
+
+
+  validateEmail <- function(mail){
+
+    res <- c(TRUE, "")
+    if (!grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>",mail, ignore.case=TRUE)){
+      res <- c(FALSE, "Not a valid Email")
+      return(res)
+    }
+
+    mail_split <- strsplit(mail, "")[[1]]
+    for (letter in mail_split) {
+      if (!grepl(letter, allowedCharactersMail, fixed=TRUE)){
+        res <- c(FALSE, "Email contains not valid characters")
+        return(res)
+      }
+    }
+
+    return (res)
+  }
+
+  loginModal <- function(message = ""){
+    modalDialog(
+      title = HTML("<center> Log in to HiDAP-AGROFIMS <center/>"),
+      div(
+        textInput("userName", "Username:"),
+        passwordInput("passwd", "Password:"),
+        HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
+      ),
+
+      actionLink("ForgotPass", "Forgot your password?"), br(),
+      actionLink("CreateAccount", "Not a user yet? Create an account."),
+
+      easyClose = FALSE,
+      footer = tagList(
+        actionButton("goBackModal", "Go back"),
+        actionButton("checkLogin", "Log in ")
+      )
+    )
+  }
+
+
+  observeEvent(input$checkLogin, {
+    mssg = "User or password is incorrect"
+    val  <- validateEmail(trimws(input$userName))
+    inputPass <- trimws(input$passwd)
+    if (USER$Logged == FALSE && as.logical(val[1]) && nchar(inputPass) > 0) {
+      Username <- isolate(trimws(input$userName))
+      Password <- digest(isolate(inputPass), "sha256", serialize = FALSE)
+
+      mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
+      userc = dbSendQuery(mydb, "select id, username, password, fname, lname from users where available = 1")
+      data1 = fetch(userc, n=-1)
+      dbDisconnect(mydb)
+      PASSWORD <- data.frame(Brukernavn = data1[,2], Passord = data1[,3])
+
+      Id.username <- which(PASSWORD$Brukernavn == Username)
+
+      if (length(Id.username) == 1) {
+        if (PASSWORD[Id.username, 2] == Password) {
+          USER$Logged <- TRUE
+          # USER$list <- paste(data1[,4], data1[,5], paste0("<", data1[,2], ">"))
+          USER$id <- data1[Id.username, "id"]
+          USER$username <- data1[Id.username, "username"]
+          USER$fname <- data1[Id.username, "fname"]
+          USER$lname <- data1[Id.username, "lname"]
+          # USER$org <- data1[Id.username, "organization"]
+          # USER$country <- data1[Id.username, "country"]
+          removeModal()
+          output$userLoggedText <- renderText(paste("User:", USER$fname, USER$lname, sep=" "))
+        }
+      }
+    }
+
+    if(USER$Logged == FALSE){
+      showModal(loginModal(mssg));
+    }
+
+  })
+
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
-
-
 
   withProgress(message = 'Loading HiDAP', value = 0, {
 

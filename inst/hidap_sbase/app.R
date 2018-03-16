@@ -143,14 +143,14 @@ ui <- dashboardPage(
                               menuItem("MET Analysis",
                                        #menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
                                        menuSubItem("MET report", tabName = "metAnalysisReport_sbase",icon = icon("file-text-o"))#,
-                              ),
+                              )#,
                               
                              
-                              menuItem("Index Selection",
-                                       menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
-                                       #menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
-                                       menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent"))
-                              )#,
+                              # menuItem("Index Selection",
+                              #          menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
+                              #          #menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
+                              #          menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent"))
+                              # )#,
                               
                      ),
                      
@@ -201,7 +201,7 @@ ui <- dashboardPage(
               
               h3("HIDAP-SweetPotato Base"),
               p(class = "text-muted", style="text-align:justify",
-                #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
+                #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2018 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
                 shiny::includeHTML("www/about_hidap.txt")
               ),
               
@@ -308,7 +308,7 @@ ui <- dashboardPage(
       
       eda4plant::edaplant_sbase_ui(name = "edaGraph_sbase"),
       
-      fbanalysis::elston_ui_sbase(name="elstonIndex"),
+      #fbanalysis::elston_ui_sbase(name="elstonIndex"),
       #fbanalysis::ui_pvs(name = "singlePVS"),
       
       #fbdocs::fbdocs_ui(name = "docHidap") ,
@@ -336,7 +336,7 @@ ui <- dashboardPage(
         tags$footer(
           a(
             list(
-              tags$div(id = "test", img(src="cc_by.png"), "2016 International Potato Center. Av La Molina 1895, La Molina - Peru.")
+              tags$div(id = "test", img(src="cc_by.png"), "2018 International Potato Center. Av La Molina 1895, La Molina - Peru.")
             ),
             href="#"
           ),
@@ -357,12 +357,12 @@ sv <- function(input, output, session) ({
   
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
   
-  #
-  #
+  withProgress(message = 'Loading HiDAP', value = 0, {
+    
+      incProgress(1/25, detail = paste("..."))
+  
   #   try({
-  #   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
-  #             80, "rsimon16",
-  #             "sweetpotato")
+  #   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu", 80, "rsimon16", "sweetpotato")
   #   })
   
   #shinyURL.server()
@@ -381,13 +381,20 @@ sv <- function(input, output, session) ({
   fbanalysis::single_server_base(input, output, session, values)
   #fbanalysis::dtr_server(input, output, session, values)
   
+      incProgress(5/25, detail = paste("..."))
+  
   fbanalysis::met_server_sbase(input, output, session, values)
   
-  fbanalysis::elston_server_sbase(input, output, session, values)
+      incProgress(10/25, detail = paste("..."))
+  
+  #fbanalysis::elston_server_sbase(input, output, session, values)
   #fbanalysis::pbaker_server(input, output, session, values)
   
   
   eda4plant::edaplant_sbase_server(input,output, session ,values)
+  
+      incProgress(19/25, detail = paste("..."))
+  
   
   #fbanalysis::pvs_server(input, output, session, values)
   #fbanalysis::genetic_server(input, output, session, values)
@@ -403,6 +410,13 @@ sv <- function(input, output, session) ({
   #brapps::locations(input, output, session, values)
   #fbmet::met_sv(input, output, session, values)
   brapps::rts_sv(input, output, session, values)
+  
+      incProgress(25/25, detail = paste("..."))
+  
+ 
+  
+  }) #end shiny progress bar
+  
   
   # drat::addRepo("c5sire")
   # res = eventReactive(input$about_update, {
