@@ -1,6 +1,14 @@
+<p>The Agronomy Field Information Management System (AgroFIMS) has been developed on CGIAR’s <a href="https://research.cip.cgiar.org/gtdms/hidap/"> HiDAP </a> (Highly-interactive Data Analysis Platform created by CGIAR’s International Potato Center, <a href="https://www.cgiar.org/research/center/cip/"> CIP</a>). AgroFIMS draws fully on ontologies, particularly the Agronomy Ontology and the Crop Ontology. It consists of modules that represent the typical cycle of operations in agronomic trial management, and enables the creation of data collection sheets using the same ontology-based set of variables, terminology, units, and protocols. AgroFIMS therefore: <p>
+
+<ul>
+<li>Standardizes data collection and description for easy aggregation and inter-linking across disparate datasets;</li>
+<li>Allows easy integration with HiDAP breeding data, or any other ontology-based datasets; </li>
+<li>Functions as a data staging repository, allowing data uploads with view/edit permissions; </li>
+<li>Enables data quality checks, statistical analysis of the data collected, and the generation of sophisticated statistics reports; </li>
+<li>Aligns a priori with CGIAR’s CG Core metadata schema;</li>
+<li>Enables easy upload to the institutional repositories, and much more. </li>
+</ul>
+
 <p>
-HiDAP supports clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. HiDAP stands for <i>Highly Interactive Data Analysis Platform</i>. It is part of on-going in-house efforts to unify best practices which include data collection, data quality and data analysis in clonal crop breeding. HiDAP builds on the former in-house tools DataCollector (DC) and CloneSelector (CS). These tools supported potato and sweetpotato breeding, respectively. HiDAP improves on prior features like data quality checks. It adds new features to support open access. New features include linkage with corporate and local databases such as CIP-BioMart and Sweetpotatobase, the latter via the <a href='http://docs.brapi.apiary.io/#' target='_new'>Breeding API (BrAPI)</a>. HiDAP is part of <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> the Global Trial Data Management System</a> suite of tools at CIP.
-</p>
-<p>
-HiDAP builds on the statistical platform <i>R</i>. This includes the <i>R</i> shiny tools, the <i>knitr</i> package, the agricolae package, and more than 100 other R packages. HiDAP re-uses also the R code that was used in both DC and CS. The R shiny package enables interactive web pages that are usable online and offline. The <i>knitr</i> package enables the creation of reproducible reports and the <i>agricolae</i> package supports the design of field experiments and their analysis.
+Funding for AgroFIMS was provided by the Bill and Melinda Gates Foundation’s Open Access, Open Data Initiative, and the <a href="http://bigdata.cgiar.org/"> CGIAR Big Data Platform.</a>
 </p>

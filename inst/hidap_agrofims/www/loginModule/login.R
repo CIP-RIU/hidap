@@ -6,12 +6,14 @@ listCountries <- c('Aruba','Afghanistan','Angola','Anguilla','Albania','Andorra'
 
 # modal to show when app is launched
 showModal(modalDialog(
-  title = HTML(" <center>  Welcome to HiDAP-AGROFIMS <center/>"),
-  HTML("You can use the open version or log in and use all characteristics of HiDAP-AGROFIMS. <br> Registration is free"),
+  title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#35b872'><h2> Welcome to HiDAP AgroFIMS<h2></font> <center/>"),
+  HTML("<div style='height: 200px;'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. <b>Lorem ipsum dolor sit amet, consectetur adipiscing elit</b>. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. </p><div>"),
   easyClose = FALSE,
   footer = tagList(
-    modalButton("Continue with Open Version"),
-    actionButton("btLoginModal", "Log in or Register")
+    # modalButton("Continue with Open Version"),
+    div(style="display:inline-block",
+    actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
+    actionButton("btLoginModal", "Log in", style=" font-size:170%;", width = 150), style="float:right")
   )
 ))
 
@@ -21,15 +23,21 @@ observeEvent(input$btLoginModal, {
 })
 
 
+observeEvent(input$closeModal, {
+  removeModal()
+})
+
 # when user wants to go to welcome modal (modal when app is launched)
 observeEvent(input$goBackModal, {
   showModal(modalDialog(
-    title = HTML(" <center>  Welcome to HiDAP-AGROFIMS <center/>"),
-    HTML("You can use the open version or log in and use all characteristics of HiDAP-AGROFIMS. <br> Registration is free"),
+    title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#35b872'><h2> Welcome to HiDAP AgroFIMS<h2></font> <center/>"),
+    HTML("<div style='height: 200px;'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. <b>Lorem ipsum dolor sit amet, consectetur adipiscing elit</b>. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. </p><div>"),
     easyClose = FALSE,
     footer = tagList(
-      modalButton("Continue with Open Version"),
-      actionButton("btLoginModal", "Log in or Register")
+      # modalButton("Continue with Open Version"),
+      div(style="display:inline-block",
+          actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
+          actionButton("btLoginModal", "Log in", style=" font-size:170%;", width = 150), style="float:right")
     )
   ))
 })
@@ -103,6 +111,7 @@ loginModalMenu <- function(message = ""){
 
 # check credentials when user logs in
 observeEvent(input$checkLogin, {
+
   mssg = "User or password is incorrect"
   val  <- validateEmail(trimws(input$userName))
   inputPass <- trimws(input$passwd)
@@ -111,7 +120,7 @@ observeEvent(input$checkLogin, {
     Password <- digest(isolate(inputPass), "sha256", serialize = FALSE)
 
     mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
-    userc = dbSendQuery(mydb, "select id, username, password, fname, lname from users where available = 1")
+    userc = dbSendQuery(mydb, "select id, username, password, fname, lname, country, organization from users where available = 1")
     data1 = fetch(userc, n=-1)
     dbDisconnect(mydb)
     PASSWORD <- data.frame(Brukernavn = data1[,2], Passord = data1[,3])
@@ -150,16 +159,64 @@ observe({
     # menu to be shown with hidap network options when the users logs in
     output$menuUser <- renderMenu({
       sidebarMenu(id ="networkMenu",
-                  div(img(src="user.png", width = "75px"), style="text-align: center;"),
-                  div(uiOutput("userLoggedText"), style="text-align: center;"),
-                  br(),
-                  menuSubItem("My Profile", tabName = "userProfile", icon = icon("user")),
-                  menuSubItem("Change Password", tabName = "changePass", icon = icon("lock")),
-                  # menuSubItem("Log Out", tabName = "logoutTab", icon = icon("sign-out"))
-                  actionLink("btLogOut", "Log Out", icon=icon("sign-out"))
+                  fluidRow(
+                    div(img(src="logo_agrofims_test.png", width = "150px"), style="text-align: center;"),
+                    br()
+                  ),
+                  fluidRow(
+                    column(width = 2),
+                    column(width = 3,
+                           div(icon("user-circle", "fa-2x"), style="text-align: right;padding-top: 7px;")
+                    ),
+                    column(width = 1),
+                    column(width = 6,
+                           div(uiOutput("userLoggedText"), style="text-align: left;"),
+                           div(icon("circle"), "Connected", style="text-align: left;")
+                  )),
+
+                  #br(),
+                  menuItem("My account", icon = icon("address-book-o"),
+                    menuSubItem("My Profile", tabName = "userProfile", icon = icon("user")),
+                    menuSubItem("Change Password", tabName = "changePass", icon = icon("lock"))
+                  ),
+                  #br(),
+                div(style="padding-left: 90px",actionButton("btLogOut", "Log Out", icon=icon("sign-out"), style='padding:4px;font-size:70%'))
+
+
       )
     })
 
+    output$menu <- renderMenu({
+      sidebarMenu(
+        menuItem("Drive", tabName = "driveNet", icon = icon("archive")),
+        menuItem("Site information", tabName = "trialSite", icon = icon("map-marker")),
+        menuItem("Fieldbook", icon = icon("book"),
+                 menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file")),
+
+                 menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
+                 menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
+        ),
+
+        menuItem("Documentation",  icon = icon("copy")
+        ),
+
+        menuItem("Help",  icon = icon("question-circle")
+        ),
+
+        menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)
+      )
+    })
+
+
+    output$registerMsg <- renderText("")
+
+    output$driveScreen <- renderUI({
+      uiDriveMain()
+    })
+
+    output$trialScreen <- renderUI({
+      uiTrialScreenMain()
+    })
 
   }
   else {
@@ -169,15 +226,160 @@ observe({
     USER$lname <- NULL
     USER$org <- NULL
     USER$country <- NULL
+
+    hideTab(inputId = "tabs", target = "Foo")
+
     output$menuUser <- renderMenu({
       sidebarMenu(id ="networkMenu",
-                  # menuItem("Log in", tabName = "login", icon = icon("lock"))
-                  actionLink("btLogIn", " Log in", icon=icon("lock"))
+                  fluidRow(
+                    div(img(src="logo_agrofims_test.png", width = "150px"), style="text-align: center;"),
+                    br()
+                  ),
+                  fluidRow(
+                    # column(width = 1),
+                    # column(width = 2,
+                    #        div(icon("user-circle", "fa-3x"), style="text-align: left;")
+                    # ),column(width = 1),
+                    column(width = 12,
+                           div("Hello, Guest", style="text-align: center;"),
+                           div(icon("circle-o"), "Not connected", style="text-align: center;")
+                    )),
+                  # br(),
+
+                  div(style="padding-left: 90px",actionButton("btLogIn", "Log in", icon=icon("sign-in"), style='padding:4px;font-size:70%'))
       )
     })
 
+
+    output$menu <- renderMenu({
+      sidebarMenu(
+            menuItem("Fieldbook", icon = icon("book"),
+                     menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file")),
+
+                     menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
+                     menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
+            ),
+
+            menuItem("Documentation",  icon = icon("copy")
+            ),
+
+            menuItem("Help",  icon = icon("question-circle")
+            ),
+
+            menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)
+      )
+    })
+
+    output$trialScreen <- renderUI({
+      h4("Loading ... ")
+    })
+
+
   }
 })
+
+###########################################################################################################
+# changing user password
+###########################################################################################################
+observeEvent(input$btChangePass, {
+  if (!validateChangePassForm()) return()
+
+  mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
+
+  strQry = paste0("select username, password  from users where username = '", USER$username, "' and available = 1")
+  res <- data.frame(fetch(dbSendQuery(mydb,strQry)))
+  userDb <- res[,1]
+  if(length(userDb) == 1){
+    newPass <- input$chngPassCurrent
+    Password <- digest(isolate(newPass), "sha256", serialize = FALSE)
+    curPass <- res[1,"password"]
+
+    if(curPass == Password){
+      newPass = digest(isolate(input$chngPassNew), "sha256", serialize = FALSE)
+      strQry = paste0("update users set password = '",newPass,"' where username ='",USER$username, "' and password = '",curPass,"' and available = 1")
+      updQry = dbSendQuery(mydb,strQry)
+      params <- list(
+        dataRequest = "passwordChanged",
+        username = USER$username,
+        fname = USER$fname,
+        lname = USER$lname
+      )
+
+      var <- POST("https://research.cip.cgiar.org/gtdms/hidap/script/agrofims/emailPasswordChanged.php", body=params)
+      code <- content(var, "text")
+      output$mssgChngPass <- renderText("<font color='blue'><h3>Your password was successfully changed</h3></font>")
+
+      output$uiChangePass <- renderUI({
+        if (USER$Logged == TRUE) {
+          wellPanel(
+            h3("Password Change"),
+            passwordInput("chngPassCurrent", "Current password: "),
+            passwordInput("chngPassNew", "New password (at least 8 and at most 12 characters) "),
+            passwordInput("chngPassNewRep", "Re-enter new password: "),
+            actionButton("btChangePass", "Update")
+          )
+        }
+      })
+
+    }
+    else{
+      output$mssgChngPass <- renderText("<font color='red'><h3>Incorrect Password</h3></font>")
+    }
+  }
+  else{
+    output$mssgChngPass <- renderText(" <font color='red'><h3>Error while changing password. Please try again</h3></font>")
+  }
+
+  dbDisconnect(mydb)
+})
+
+
+###########################################################################################################
+# reseting user password
+###########################################################################################################
+observeEvent(input$ResetPass,{
+  output$pass <- renderText("")
+  usermail <- trimws(input$userMailReset)
+
+  validEmail <- validateEmail(usermail)
+  if(!as.logical(validEmail[1])){
+    output$pass <- renderText(paste("<font color='red'> <h4><b>", usermail, ": </b> ", validEmail[2], "</h4> </font>", sep=""))
+    return()
+  }
+
+  mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
+
+  strQry = paste("select count(*) as cant from users where username = '", usermail, "' and available = 1", sep = "")
+  res <- fetch(dbSendQuery(mydb,strQry))
+  num <- (res["cant"])
+  dbDisconnect(mydb)
+  if (num == 1 ){
+
+    params <- list(
+      dataRequest = "resetPassword",
+      username = usermail
+    )
+
+    var <- httr::POST("https://research.cip.cgiar.org/gtdms/hidap/script/agrofims/resetPasswordHidap.php", body=params)
+    code <- content(var, "text")
+    print(code)
+    if (code == "200"){
+      # showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("Succesfully reset")))
+      output$pass <- renderText("<h4>Password reset successful. An email has been sent with a new password </h4>")
+      updateTextInput(session,"userMailReset", value="" )
+    }
+    else{
+      # showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("Problems reseting password")))
+      output$pass <- renderText("<font color='red'> <h5>Problems reseting password</h5> </font>")
+    }
+  }
+  else{
+    output$pass <- renderText(paste("<font color='red'> <h4>User <b>", usermail, "</b> is not registered</h4> </font>", sep=""))
+  }
+} )
+
+###########################################################################################################
+
 
 ###########################################################################################################
 # creating a new user
@@ -209,10 +411,10 @@ observeEvent(input$btCreateUser, {
   if (code == "500"){
     strQry <- paste("delete from users where username = '", strMail, "'", sep ="")
     qryDel = dbSendQuery(mydb, strQry)
-    showModal(modalDialog(title = "Hidap Network", HTML("Problems creating account, please try again.")))
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("Problems creating account, please try again.")))
   }
   else if (code == "200") {
-    showModal(modalDialog(title = "Hidap Network", HTML("<h4>Yout account was successfully created, a confirmation message will be sent soon. Check your email to activate your account.</h4> <br> <h5>If you haven't received a message, please check your spam and add us to your contacts.</h5>")))
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("<h4>Yout account was successfully created, a confirmation message will be sent soon. Check your email to activate your account.</h4> <br> <h5>If you haven't received a message, please check your spam and add us to your contacts.</h5>")))
     output$uiLogin <- renderUI({
 
       if (USER$Logged == FALSE) {
@@ -233,12 +435,26 @@ observeEvent(input$btCreateUser, {
   else{
     strQry <- paste("delete from users where username = '", strMail, "'", sep ="")
     qryDel = dbSendQuery(mydb, strQry)
-    showModal(modalDialog(title = "Hidap Network", HTML("Problems creating account, please try later.")))
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("Problems creating account, please try later.")))
   }
   dbDisconnect(mydb)
+})
+###########################################################################################################
 
+
+observeEvent(input$btLogIn, {
+  showModal(loginModalMenu())
 })
 
+
+observeEvent(input$btLogOut, {
+  # updateTabItems(session, "tabs", "dashboard")
+  USER$Logged <- FALSE
+})
+
+###########################################################################################################
+# validation functions
+###########################################################################################################
 validateUserCreateForm <- function(){
   mail <- trimws(input$newUsrMail)
   fName <- trimws(input$newUsrFName)
@@ -333,18 +549,6 @@ validateUserCreateForm <- function(){
 
 }
 
-
-observeEvent(input$btLogIn, {
-  showModal(loginModalMenu())
-})
-
-
-observeEvent(input$btLogOut, {
-  # updateTabItems(session, "tabs", "dashboard")
-  USER$Logged <- FALSE
-})
-
-
 validateUserCreateForm <- function(){
   mail <- trimws(input$newUsrMail)
   fName <- trimws(input$newUsrFName)
@@ -357,7 +561,7 @@ validateUserCreateForm <- function(){
   if(!as.logical(validEmail[1])){
     updateTextInput(session, "newUsrMail",
                     label ="* Email Address (username): INVALID EMAIL ")
-    output$pass <- renderText(paste("<font color=red><h4>", validEmail[2],"</h4></font>", sep = ""))
+    output$registerMsg <- renderText(paste("<font color=red><h4>", validEmail[2],"</h4></font>", sep = ""))
     return(FALSE)
   }
   else{
@@ -366,7 +570,7 @@ validateUserCreateForm <- function(){
   }
 
   if(usernameIsInDb(mail)){
-    output$pass <- renderText("<font color=red><h4>User is already registered</h4></font>")
+    output$registerMsg <- renderText("<font color=red><h4>User is already registered</h4></font>")
     return(FALSE)
   }
 
@@ -382,19 +586,19 @@ validateUserCreateForm <- function(){
   passwMatch  <- lnPass == lnPassR && pass == trimws(input$newUsrPassRepeat)
 
   if(lenghtValid == 0){
-    output$pass <- renderText("<font color=red><h4>Must complete all fields with (*)</h4></font>")
+    output$registerMsg <- renderText("<font color=red><h4>Must complete all fields with (*)</h4></font>")
     return(FALSE)
   }
 
   valPass <- validatePassword(pass)
 
   if(!as.logical(valPass[1])){
-    output$pass <- renderText(paste("<font color=red><h4>", valPass[2],"</h4></font>", sep=""))
+    output$registerMsg <- renderText(paste("<font color=red><h4>", valPass[2],"</h4></font>", sep=""))
     return(FALSE)
   }
 
   if(!passwMatch ){
-    output$pass <- renderText("<font color=red><h4>Passwords don't match</h4></font>")
+    output$registerMsg <- renderText("<font color=red><h4>Passwords don't match</h4></font>")
     return(FALSE)
   }
 
@@ -402,7 +606,7 @@ validateUserCreateForm <- function(){
   if(!as.logical(validFname[1])){
     updateTextInput(session, "newUsrFName",
                     label ="* Name: INVALID STRING")
-    output$pass <- renderText(paste0("<font color=red><h4>", validFname[2], "</h4></font>"))
+    output$registerMsg <- renderText(paste0("<font color=red><h4>", validFname[2], "</h4></font>"))
     return(FALSE)
   }
   else{
@@ -414,7 +618,7 @@ validateUserCreateForm <- function(){
   if(!as.logical(validLname[1])){
     updateTextInput(session, "newUsrLName",
                     label ="* Lastname: INVALID STRING")
-    output$pass <- renderText(paste0("<font color=red><h4>", validLname[2], "</h4></font>"))
+    output$registerMsg <- renderText(paste0("<font color=red><h4>", validLname[2], "</h4></font>"))
     return(FALSE)
   }
   else{
@@ -426,7 +630,7 @@ validateUserCreateForm <- function(){
   if(!as.logical(validOrg[1])){
     updateTextInput(session, "newUsrOrg",
                     label ="* Organization: INVALID STRING")
-    output$pass <- renderText(paste0("<font color=red><h4>", validOrg[2], "</h4></font>"))
+    output$registerMsg <- renderText(paste0("<font color=red><h4>", validOrg[2], "</h4></font>"))
     return(FALSE)
   }
   else{
@@ -434,7 +638,7 @@ validateUserCreateForm <- function(){
                     label ="* Organization: ")
   }
 
-  output$pass <- renderText("")
+  output$registerMsg <- renderText("")
   return(TRUE)
 
 }
@@ -448,33 +652,38 @@ validateChangePassForm <- function(){
   lnNewPRep   <- nchar(trimws(input$chngPassNewRep))
 
   lenghtValid <- lnCurPass * lnNewPass * lnNewPRep
-  passwMatch  <- lnNewPass == lnNewPRep && trimws(input$chngPassNew) == trimws(input$chngPassNewRep)
+  passwMatch  <- lnNewPass == lnNewPRep && newPass == trimws(input$chngPassNewRep)
+  samePass <- newPass == curPass
 
   if(lenghtValid == 0){
-    showModal(modalDialog(title = "Hidap Network", HTML("Must complete all fields")))
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("Must complete all fields")))
     return(FALSE)
   }
 
   validPass <- validatePassword(curPass)
   if(!as.logical(validPass[1])){
-    showModal(modalDialog(title = "Hidap Network", HTML(paste("Current Password:", validPass[2]))))
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML(paste("Current Password:", validPass[2]))))
     return(FALSE)
   }
 
   validPass <- validatePassword(newPass)
   if(!as.logical(validPass[1])){
-    showModal(modalDialog(title = "Hidap Network", HTML(paste("New Password:", validPass[2]))))
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML(paste("New Password:", validPass[2]))))
+    return(FALSE)
+  }
+
+  if(samePass){
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("Old and new passwords are the same.")))
     return(FALSE)
   }
 
   if(!passwMatch ){
-    showModal(modalDialog(title = "Hidap Network", HTML("New Passwords don't match")))
+    showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("New Passwords don't match.")))
     return(FALSE)
   }
 
   return(TRUE)
 }
-
 
 validatePassword <-function(pass){
   lnPass  <- nchar(pass)
@@ -504,7 +713,6 @@ usernameIsInDb <- function(username){
   num <- (res["cont"])
   dbDisconnect(mydb)
   return(num == 1)
-
 }
 
 validateInput <- function(input){
