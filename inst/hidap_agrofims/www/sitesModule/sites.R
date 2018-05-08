@@ -10,7 +10,128 @@ observeEvent(input$btNewTrialSite, {
   })
 })
 
+output$fbsites_ui_admin1 <-renderUI({
 
+  
+  cntry <- input$inSiteCountry
+  admin1 <- get_admin_agrofims(sites_data = geodb, country = cntry)
+  
+  if(is.null(cntry)){
+     admin1 <- ""
+  }
+  
+  if (input$siteClickId %like% "siteEdit"){
+
+    row_to_edit = as.numeric(gsub("siteEdit_","", input$siteClickId))
+    output$trialScreen <- renderUI({
+     vData <- dt$trialSites[row_to_edit,]
+    })
+     admin1 <- vData[[5]]
+  }
+  
+  
+  selectizeInput("inSiteAdmin1", label= "Site, first-level administrative division name", multiple = TRUE,
+                 choices = admin1,
+                 selected= 1,
+                 options = list(maxItems = 1, placeholder = 'Select admin 1'))
+})
+
+
+output$fbsites_ui_admin2 <-renderUI({
+
+  cntry <- input$inSiteCountry
+  admin1 <- input$inSiteAdmin1
+  admin2 <- get_admin_agrofims(geodb, country = cntry, admin1 = admin1)
+
+
+  if(is.na(admin2) && is.null(admin1)){
+    textInput("inSiteAdmin2_text", label = "Site, second-level administrative division name", value= "") #)vData[[7]])
+  } else {
+
+    selectizeInput("inSiteAdmin2", label= "Site, second-level administrative division name", multiple = TRUE,
+                   choices = admin2,
+                   selected= 1,
+                   options = list(maxItems = 1, placeholder = 'Select admin 2'))
+  }
+
+
+
+})
+
+
+output$fbsites_ui_admin3 <-renderUI({
+
+  cntry <- input$inSiteCountry
+  admin1 <- input$inSiteAdmin1
+  admin2 <- input$inSiteAdmin2
+  admin3 <- get_admin_agrofims(geodb, country = cntry,
+                                admin1 = admin1,
+                                admin2 = admin2)
+
+
+  if(is.na(admin3)){
+  textInput("inSiteAdmin3_text", label = "Site, third-level administrative division name", value= "") #)vData[[7]])
+  } else {
+
+  selectizeInput("inSiteAdmin3", label= "Site, third-level administrative division name", multiple = TRUE,
+                 choices = admin3,
+                 selected= 1,
+                 options = list(maxItems = 1, placeholder = 'Select admin 3'))
+  }
+
+})
+
+
+output$fbsites_ui_admin4 <-renderUI({
+
+  cntry <- input$inSiteCountry
+  admin1 <- input$inSiteAdmin1
+  admin2 <- input$inSiteAdmin2
+  admin3 <- input$inSiteAdmin3
+
+  admin4 <- get_admin_agrofims(geodb, country = cntry,
+                                admin1 = admin1,
+                                admin2 = admin2,
+                                admin3 = admin3)
+  if(is.na(admin4)){
+
+  textInput("inSiteAdmin4_text", label = "Site, fourth-level administrative division name", value= "") #)vData[[7]])
+  } else {
+
+  selectizeInput("inSiteAdmin4", label= "Site, fourth-level administrative division name", multiple = TRUE,
+                 choices = admin4,
+                 selected= 1,
+                 options = list(maxItems = 1, placeholder = 'Select admin 4'))
+
+  }
+})
+
+output$fbsites_ui_admin5 <-renderUI({
+
+  cntry <- input$inSiteCountry
+  admin1 <- input$inSiteAdmin1
+  admin2 <- input$inSiteAdmin2
+  admin3 <- input$inSiteAdmin3
+  admin4 <- input$inSiteAdmin4
+
+
+  admin5 <- get_admin_agrofims(geodb, country = cntry,
+                               admin1 = admin1,
+                               admin2 = admin2,
+                               admin3 = admin3,
+                               admin4 = admin4
+                               )
+
+  if(is.na(admin5)){
+    textInput("inSiteAdmin5_text", label = "Site, fifth-level administrative division name", value= "") #)vData[[7]])
+  } else {
+
+    selectizeInput("inSiteAdmin5", label= "Site, fifth-level administrative division name", multiple = TRUE,
+                 choices = admin5,
+                 selected= 1,
+                 options = list(maxItems = 1, placeholder = 'Select admin 5'))
+  }
+})
 
 observeEvent(input$goToMainSiteScreen, {
   output$trialScreen <- renderUI({
@@ -20,20 +141,104 @@ observeEvent(input$goToMainSiteScreen, {
 })
 
 
+observe({
+
+  #After all this conditions has been made, the submit button will appear to save the information
+  toggleState("btCreateSite", !is.null(input$inSiteCountry) && str_trim(input$inSiteCountry, side = "both")!= "" &&
+
+                !is.null(input$inSiteName) && str_trim(input$inSiteName, side = "both")!= "" &&
+
+                  !is.null(input$inSiteAdmin1) && str_trim(input$inSiteAdmin1, side = "both")!= "" &&
+
+                 ((!is.null(input$inSiteAdmin2) && str_trim(input$inSiteAdmin2, side = "both")!="" ) ||
+                   (!is.null(input$inSiteAdmin2_text) && str_trim(input$inSiteAdmin2_text, side = "both")!="")) &&
+
+                ((!is.null(input$inSiteAdmin3) && str_trim(input$inSiteAdmin3, side = "both")!="") ||
+                    (!is.null(input$inSiteAdmin3_text) && str_trim(input$inSiteAdmin3_text, side = "both")!="") ) &&
+
+                ((!is.null(input$inSiteAdmin4) && str_trim(input$inSiteAdmin4, side = "both")!="") ||
+                   (!is.null(input$inSiteAdmin4_text) && str_trim(input$inSiteAdmin4_text, side = "both")!="") ) &&
+
+                ((!is.null(input$inSiteAdmin5) && str_trim(input$inSiteAdmin5, side = "both")!="")  ||
+                   (!is.null(input$inSiteAdmin5_text) && str_trim(input$inSiteAdmin5_text, side = "both")!="") ) &&
+
+                !is.null(input$inSiteNearestPlace) && str_trim(input$inSiteNearestPlace, side = "both")!= "" &&
+                !is.null(input$inSiteLatitude) && str_trim(input$inSiteLatitude, side = "both")!= ""  &&
+                !is.null(input$inSiteLongitude) && str_trim(input$inSiteLongitude, side = "both")!= ""
+
+  )
+})
+
+
 observeEvent(input$btCreateSite, {
   if(validateNewList()){
 
-    vSiteType <- input$inSiteType       #var1
-    vSiteNama <- input$inSiteName       #var2
-    vCountry  <- input$inSiteCountry    #var3
-    vAdmin1   <- input$inSiteAdmin1     #var4
-    vAdmin2   <- input$inSiteAdmin2     #var5
-    vVillage  <- input$inSiteVillage    #var6
+    vSiteType <- input$inSiteType         #var1
+    vSiteNama <- input$inSiteName         #var2
+    vCountry  <- input$inSiteCountry      #var3
+    vAdmin1   <- input$inSiteAdmin1       #var4
+
+
+    flag_admin2 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1 )
+
+    if(is.na(flag_admin2)){
+      vAdmin2   <- input$inSiteAdmin2_text       #var5
+    } else {
+      vAdmin2   <- input$inSiteAdmin2
+    }
+
+    flag_admin3 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1, admin2 = vAdmin2)
+    print("flag admin3")
+    print(flag_admin3)
+    print("end flag3")
+    if(is.na(flag_admin3)){
+      vAdmin3   <- input$inSiteAdmin3_text       #var5
+    } else {
+      vAdmin3   <- input$inSiteAdmin3
+    }
+
+    print(vCountry)
+    print(vAdmin1)
+    print(vAdmin2)
+    print(vAdmin3)
+
+    flag_admin4 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1, admin2 = vAdmin2, admin3 = vAdmin3)
+    print("flag admin4")
+    print(flag_admin4)
+    print("end flag4")
+
+
+    if(is.na(flag_admin4)){
+      vAdmin4   <- input$inSiteAdmin4_text       #var5
+    } else {
+      vAdmin4   <- input$inSiteAdmin4
+    }
+
+    flag_admin5 <- get_admin_agrofims(geodb, country = vCountry,  admin1 = vAdmin1, admin2 = vAdmin2, admin3 = vAdmin3, admin4 = vAdmin4)
+
+    if(is.na(flag_admin5)){
+      vVillage   <- input$inSiteAdmin5_text       #var5
+    } else {
+      vVillage   <- input$inSiteAdmin5
+    }
+
     vElevation <- input$inSiteElevation #var7
     vLatitud  <- input$inSiteLatitude   #var8
-    vLongitude <- input$inSiteLongitude #var9
-    vVegetation <- paste(input$inSiteVegetation, collapse = ",") #var11
-    vDescNotes <- input$inSiteDescNotes #var10
+    vLongitude  <- input$inSiteLongitude   #var8
+    vNearest <- input$inSiteNearestPlace #var 11
+    # vDescNotes <- input$inSiteDescNotes #var10
+
+    # validate(
+    #   need(input$inSiteLatitude!= "", "Please insert latitude")
+    # )
+    #
+    # validate(
+    #   need(input$inSiteLongitude!= "", "Please insert longitude")
+    # )
+    #
+    # validate(
+    #   need(input$inSiteElevation!= "", "Please insert eleveation")
+    # )
 
 
     vSiteId <-  stri_rand_strings(1, 5,  '[A-Z]') #var12
@@ -43,17 +248,22 @@ observeEvent(input$btCreateSite, {
 
     mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
     insQry=  paste0("insert into user_sites ( " ,
-                    " var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11, var12, created, user_id) values('")
+                    " var1, var2, var3, var4, var5, var6, var7, var8, var9, var10 ,var11, var12, created, user_id) values('")
     insQry= paste0(insQry, vSiteType)
-    insQry= paste(insQry, vSiteNama, vCountry, vAdmin1, vAdmin2, vVillage, vElevation, vLatitud, vLongitude, vDescNotes, vVegetation, vSiteId,  createDate, sep="','")
+    insQry= paste(insQry, vSiteNama, vCountry, vAdmin1, vAdmin2, vAdmin3, vElevation, vLatitud, vLongitude, vNearest, vVillage, vSiteId,  createDate, sep="','")
     insQry= paste0(insQry, "', " , USER$id, ")")
     qryUsers = dbSendQuery(mydb, insQry)
     dbDisconnect(mydb)
+    updateSiteRDS()
+
+    shinyalert("Success", "New site has been successfully added", type = "success")
+    #shinysky::showshinyalert(session, "alert_hagroSites", paste("New site has been successfully added"), styleclass = "success")
+
     output$trialScreen <- renderUI({
       uiTrialScreenMain()
     })
 
-
+    # shinysky::showshinyalert(session, "alert_SI_created", paste("SUCCESS: You successfully created a new site"), styleclass = "success")
   }
   else{
     ## TO DO
@@ -67,14 +277,72 @@ observeEvent(input$btUpdateSite, {
     vSiteType <- input$inSiteType       #var1
     vSiteName <- input$inSiteName       #var2
     vCountry  <- input$inSiteCountry    #var3
+
     vAdmin1   <- input$inSiteAdmin1     #var4
-    vAdmin2   <- input$inSiteAdmin2     #var5
-    vVillage  <- input$inSiteVillage    #var6
+
+    # vAdmin2   <- input$inSiteAdmin2     #var5
+    #
+    # vAdmin3   <- input$inSiteAdmin3     #
+    # vAdmin3   <- input$inSiteAdmin3_text
+    #
+    # vAdmin4   <- input$inSiteAdmin4     #
+    # vAdmin4   <- input$inSiteAdmin4_text
+
+    flag_admin2 <- get_admin2_agrofims(geodb, country_input = vCountry, admin1_input = vAdmin1 )
+
+    if(is.na(flag_admin2)){
+      vAdmin2   <- input$inSiteAdmin2       #var
+    } else {
+      vAdmin2   <- input$inSiteAdmin2_text
+    }
+
+    flag_admin3 <- get_admin3_agrofims(geodb, country_input = vCountry, admin1_input = vadmin1, admin2_input = vadmin2)
+
+    if(is.na(flag_admin3)){
+      vAdmin3   <- input$inSiteAdmin3       #var5
+    } else {
+      vAdmin3   <- input$inSiteAdmin3_text
+    }
+
+    flag_admin4 <- get_admin4_agrofims(geodb, country_input = vCountry, admin1_input = vadmin1, admin2_input = vadmin2, admin3_input = vadmin3)
+
+    if(is.na(flag_admin4)){
+      vAdmin4   <- input$inSiteAdmin4       #var5
+    } else {
+      vAdmin4   <- input$inSiteAdmin4_text
+    }
+
+    flag_admin5 <- get_admin5_agrofims(geodb, country_input = vCountry,  admin1_input = vadmin1, admin2_input = vadmin2, admin3_input = vadmin3, admin4_input = vadmin4)
+
+    if(is.na(flag_admin5)){
+      vVillage   <- input$inSiteAdmin5       #var10
+    } else {
+      vVillage   <- input$inSiteAdmin5_text  #var10
+    }
+
+    # vAdmin3   <- input$inSiteAdmin3     #
+    # vAdmin3   <- input$inSiteAdmin3_text
+    #
+    # vAdmin4   <- input$inSiteAdmin4     #
+    # vAdmin4   <- input$inSiteAdmin4_text
+
+    # vVillage   <- input$inSiteAdmin5     #
+    # vVillage   <- input$inSiteAdmin5_text
+
+    #vVillage  <- input$inSiteVillage    #var6
+
+    # vVillage   <- input$inSiteAdmin5     #var6
+    # vVillage   <- input$inSiteAdmin5_text  #var6
+    #
+    #vVillage  <- input$inSiteVillage    #var6
+
+
     vElevation <- input$inSiteElevation #var7
     vLatitud  <- input$inSiteLatitude   #var8
     vLongitude <- input$inSiteLongitude #var9
-    vVegetation <- paste(input$inSiteVegetation, collapse = ",") #var11
-    vDescNotes <- input$inSiteDescNotes #var10
+    # vVegetation <- paste(input$inSiteVegetation, collapse = ",") #var11
+    vNearest <- input$inSiteNearestPlace #var11
+    # vDescNotes <- input$inSiteDescNotes #var10
 
 
     vSiteId <-  input$inSiteID #var12
@@ -82,6 +350,7 @@ observeEvent(input$btUpdateSite, {
     date  <- as.character(Sys.time(), "%Y%m%d%H%M%S")
     modifyDate <-as.character(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
+    
     mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
     updQry=  paste0("update user_sites set" ,
                     " var1 = '", vSiteType, "', ",
@@ -89,18 +358,19 @@ observeEvent(input$btUpdateSite, {
                     " var3 = '", vCountry, "', ",
                     " var4 = '", vAdmin1, "', ",
                     " var5 = '", vAdmin2, "', ",
-                    " var6 = '", vVillage, "', ",
+                    " var6 = '", vAdmin3, "', ",
                     " var7 = '", vElevation, "', ",
                     " var8 = '", vLatitud, "', ",
                     " var9 = '", vLongitude, "', ",
-                    " var10 = '", vDescNotes, "', ",
-                    " var11 = '", vVegetation, "', ",
+                    " var10 = '", vVillage, "', ",
+                    " var11 = '", vNearest, "', ",
                     " modified = '", modifyDate, "' ",
                     "where user_id = " , USER$id, " " ,
                     "and var12 = '", vSiteId , "'")
 
     qryUsers = dbSendQuery(mydb, updQry)
     dbDisconnect(mydb)
+    updateSiteRDS()
     output$trialScreen <- renderUI({
       uiTrialScreenMain()
     })
@@ -137,6 +407,42 @@ updateMarkers <- function(){
 
 }
 
+updateSiteRDS <- function(){
+  mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
+
+  strQry = paste0("SELECT
+                  id,
+                   var12,
+                   var1,
+                   var2,
+                   var3,
+                   var4,
+                   var5,
+                   var6,
+                   var7,
+                   var8,
+                   var9,
+                   var10,
+                   var11,
+                   created
+                   FROM user_sites
+                   order by created DESC, id DESC")
+  qryMySites = dbSendQuery(mydb,strQry)
+  allSites = fetch(qryMySites, n=-1)
+  df_allSites <- data.frame(allSites)
+  # "/home/obenites/HIDAP_SB_1.0.0/hidap/inst/hidap_agrofims"
+
+  headers_sites <- c("id", "shortn", "Type" , "local", "cntry", "adm1", "adm2", "admin3", "elev", "latd" , "lond", "village", "nearpop" ,"date_creation")
+  names(df_allSites) <- headers_sites
+  path <- fbglobal::get_base_dir()
+  path <- file.path(path, "table_sites_agrofims.rds")
+  print(path)
+  # saveRDS(df_allSites, file = "/home/obenites/HIDAP_SB_1.0.0/hidap/inst/hidap_agrofims/www/internal_files/table_sites_agrofims.rds")
+  saveRDS(df_allSites, file = path)
+
+  dbDisconnect(mydb)
+}
+
 observeEvent(input$siteClick,{
 
 
@@ -166,8 +472,7 @@ observeEvent(input$siteClick,{
     dt$trialSites <- deleteSite(row_to_delete)
     updateMarkers()
   }
-}
-)
+})
 
 
 modalViewSite <- function(pSiteID){
@@ -203,6 +508,7 @@ deleteSite <- function(pSiteID){
 
   qryMyfiles = dbSendQuery(mydb,strQry)
   dbDisconnect(mydb)
+  updateSiteRDS()
   return(updTrialSites())
   # dt$trialSites <- dt$trialSites[-pSiteID,]
 
@@ -234,8 +540,6 @@ updTrialSites <- function() {
   dbDisconnect(mydb)
   return(df_withMe)
 }
-
-
 
 
 ### to do: function to validate new site inputs

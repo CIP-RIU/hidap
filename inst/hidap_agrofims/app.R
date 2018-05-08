@@ -66,7 +66,6 @@ library(tibble)
 
 # library(shinyalert)
 
-
 # packages for HiDAP network
 library(stringi)
 library(digest)
@@ -81,8 +80,7 @@ library(bsplus) #hidapnetwork
 library(htmltools) #hidapnetwork
 
 library(lubridate)
-
-#library(hidapNetwork)
+library(shinyalert) #new
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
@@ -97,16 +95,25 @@ library(lubridate)
 
 
 source("www/loginModule/dbData.R", local = TRUE)
+
 #$(".headerTopRight").empty()
-jscode <- '
-    shinyjs.foo = function(params) {
+# jscode <- '
+#     shinyjs.foo = function(params) {
+#
+#     console.log(params);
+#
+# }
+# '
 
-    console.log(params);
-
+jscode <- "
+shinyjs.collapse = function(boxid) {
+$('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
 }
-'
+"
 
 ui <- dashboardPage(
+
+
 
   # skin = "green",
   dashboardHeader(title = "", titleWidth = "250px"
@@ -219,6 +226,10 @@ ui <- dashboardPage(
   ),
 
   dashboardBody(
+
+
+    useShinyjs(),
+    extendShinyjs(text = jscode),
     #
     # tags$head(
     #   tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
@@ -235,7 +246,7 @@ ui <- dashboardPage(
           }
       @media (min-width: 1200px) {
         .headerTopRight {
-          line-height: 50px;
+          line-height: 0px;
           text-align: right;
           font-family: "Arial";
           padding: 0 15px;
@@ -244,11 +255,15 @@ ui <- dashboardPage(
       color: white;
         }
       }
+
+      .sidebar-menu .treeview-menu {
+          padding-left: 26px;
+      }
     '))),
 
     tags$script(HTML('
                                             $(document).ready(function() {
-       $("header").find("nav").append(\'<div class="headerTopRight"> Big Data Platform </div>\');
+       $("header").find("nav").append(\'<div class="headerTopRight"> <img src="http://bigdata.cgiar.org/wp-content/uploads/2017/06/CGIAR_PforBD-Orange-logo220.png" width="105px"> </div>\');
        })
        ')
       ),
@@ -282,7 +297,7 @@ ui <- dashboardPage(
 
                               /* other links in the sidebarmenu when hovered */
                               .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-                              background-color: #aac309 !important;
+                              background-color: #3C8DBC !important;
                               }
 
 
@@ -398,12 +413,12 @@ ui <- dashboardPage(
               #img(src="potato.jpg", width = "100%"),-
               # img(src="about.jpg", width = "100%"),
               # img(src="images/banner.jpg", width = "1640px", height="390px"),
-              img(src="images/banner_agrofims_test.png", width = "100%", height="100%"),
+              img(src="images/banner_agrofims_test2.jpg", width = "100%", height="100%"),
 
               br(),
               br(),
 
-              h2("HIDAP AgroFIMS v.0.0.1"),
+              h2("HIDAP AgroFIMS v.0.0.10"),
               p(class = "text-muted", style="text-align:justify",
                 #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
                 shiny::includeHTML("www/about_hidap.txt")
@@ -512,12 +527,13 @@ ui <- dashboardPage(
         tags$footer(
           a(
             list(
-              tags$div(id = "test", img(src="cc_by.png"), "2018 International Potato Center. Av La Molina 1895, La Molina - Peru.")
+              #tags$div(id = "test", img(src="cc_by.png"), "2018 International Potato Center. Av La Molina 1895, La Molina - Peru.")
+              tags$div(id = "test", "Powered by HIDAP")
             ),
             href="#"
           ),
           tags$style("footer {background-color: #222d32;height: 40px;position: absolute;bottom: 0;width: 100%;}"),
-          tags$style("#test {color: #fff;padding-top: 5px;}")
+          tags$style("#test {color: #fff;padding-top: 9px;}")
         )
       )
     )
@@ -528,22 +544,44 @@ ui <- dashboardPage(
 
 ############################################################
 
-sv <- function(input, output, session) ({
+sv <- function(input, output,  session) ({
+
+  USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
 
   useShinyjs()
   extendShinyjs(text = jscode)
 
 
-  USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
+  # shiny::observe({
+  #   #print(USER$Logged)
+  #     login <- USER$Logged
+  # })
+
+  #USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
+
+
+ # login_reactive <- reactive({
+ #   print(USER$Logged)
+ #   if(USER$Logged){
+ #     USER$Logged<- TRUE
+ #     login <- TRUE
+ #   }else {
+ #     USER$Logged <- FALSE
+ #     login <- FALSE
+ #   }
+ #   login
+ #   #login <- USER$Logged
+ # })
+
+
+
+  # USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
   dt_myMaterialList <- reactiveValues()
 
   source("www/loginModule/userMenuUi.R",local = TRUE)
   source("www/driveModule/drive.R", local = TRUE)
   source("www/sitesModule/sites.R", local = TRUE)
   source("www/loginModule/login.R", local = TRUE)
-
-
-
 
 
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")

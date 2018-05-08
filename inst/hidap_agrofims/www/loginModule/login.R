@@ -6,14 +6,15 @@ listCountries <- c('Aruba','Afghanistan','Angola','Anguilla','Albania','Andorra'
 
 # modal to show when app is launched
 showModal(modalDialog(
-  title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#35b872'><h2> Welcome to HiDAP AgroFIMS<h2></font> <center/>"),
-  HTML("<div style='height: 200px;'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. <b>Lorem ipsum dolor sit amet, consectetur adipiscing elit</b>. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. </p><div>"),
+  title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#f7941d'><h2> Welcome to HiDAP AgroFIMS</h2></font> </center>"),
+  HTML("<div style='height: 200px;'><p>The Agronomy Field Information Management System (AgroFIMS) has been developed on CGIAR’s HiDAP (Highly-interactive Data Analysis Platform created by CGIAR’s International Potato Center, CIP). AgroFIMS draws fully on ontologies, particularly the Agronomy Ontology and the Crop Ontology. It consists of modules that represent the typical cycle of operations in agronomic trial management, and enables the creation of data collection sheets using the same ontology-based set of variables, terminology, units and protocols.</p><div>"),
   easyClose = FALSE,
   footer = tagList(
     # modalButton("Continue with Open Version"),
     div(style="display:inline-block",
-    actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
-    actionButton("btLoginModal", "Log in", style=" font-size:170%;", width = 150), style="float:right")
+    #actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
+    actionButton("closeModal", "Continue", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+    actionButton("btLoginModal", "Log in", style=" font-size:150%;", width = 150), style="float:right;text-align:center")
   )
 ))
 
@@ -30,14 +31,15 @@ observeEvent(input$closeModal, {
 # when user wants to go to welcome modal (modal when app is launched)
 observeEvent(input$goBackModal, {
   showModal(modalDialog(
-    title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#35b872'><h2> Welcome to HiDAP AgroFIMS<h2></font> <center/>"),
+    title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#f7941d'><h2> Welcome to HiDAP AgroFIMS<h2></font> </center>"),
     HTML("<div style='height: 200px;'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. <b>Lorem ipsum dolor sit amet, consectetur adipiscing elit</b>. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. </p><div>"),
     easyClose = FALSE,
     footer = tagList(
       # modalButton("Continue with Open Version"),
       div(style="display:inline-block",
-          actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
-          actionButton("btLoginModal", "Log in", style=" font-size:170%;", width = 150), style="float:right")
+          #actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
+          actionButton("closeModal", "Continue", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+          actionButton("btLoginModal", "Log in", style=" font-size:150%;", width = 150), style="float:right;text-align:center")
     )
   ))
 })
@@ -64,7 +66,7 @@ validateEmail <- function(mail){
 # to show login modal when called from welcome modal
 loginModal <- function(message = ""){
   modalDialog(
-    title = HTML("<center> Log in to HiDAP-AGROFIMS <center/>"),
+    title = HTML("<center><font color='#f7941d'><h2> Log in to HiDAP AGROFIMS </h2></font></center>"),
     div(
       textInput("userName", "Username:"),
       passwordInput("passwd", "Password:"),
@@ -79,16 +81,17 @@ loginModal <- function(message = ""){
 
     easyClose = FALSE,
     footer = tagList(
-      actionButton("goBackModal", "Go back"),
-      actionButton("checkLogin", "Log in ")
-    )
+      div(style="display:inline-block",
+      actionButton("checkLogin", "Log in", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+      actionButton("goBackModal", "Go back", style=" font-size:150%;", width = 150),
+      style="float:right;text-align:center"))
   )
 }
 
 # when the modal is called from sidebar menu
 loginModalMenu <- function(message = ""){
   modalDialog(
-    title = HTML("<center> Log in to HiDAP-AGROFIMS <center/>"),
+    title = HTML("<center><font color='#f7941d'><h2> Log in to HiDAP AGROFIMS </h2></font></center>"),
     div(
       textInput("userName", "Username:"),
       passwordInput("passwd", "Password:"),
@@ -103,9 +106,9 @@ loginModalMenu <- function(message = ""){
 
     easyClose = FALSE,
     footer = tagList(
-      modalButton("Close"),
-      actionButton("checkLogin", "Log in ")
-    )
+      div(style="display:inline-block",
+      actionButton("checkLogin", "Log in", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+      actionButton("closeModal", "Close", style=" font-size:150%;", width = 150), style="float:right;text-align:center"))
   )
 }
 
@@ -188,8 +191,8 @@ observe({
 
     output$menu <- renderMenu({
       sidebarMenu(
-        menuItem("Drive", tabName = "driveNet", icon = icon("archive")),
-        menuItem("Site information", tabName = "trialSite", icon = icon("map-marker")),
+        # menuItem("Drive", tabName = "driveNet", icon = icon("archive")),
+        menuItem("Site information", tabName = "trialSite", icon = icon("location-arrow")),
         menuItem("Fieldbook", icon = icon("book"),
                  menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file")),
 
