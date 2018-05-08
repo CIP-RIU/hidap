@@ -23,17 +23,25 @@ output$fbsites_ui_admin1 <-renderUI({
   if (input$siteClickId %like% "siteEdit"){
 
     row_to_edit = as.numeric(gsub("siteEdit_","", input$siteClickId))
-    output$trialScreen <- renderUI({
+   
      vData <- dt$trialSites[row_to_edit,]
-    })
-     admin1 <- vData[[5]]
+    
+     selAdmin1 <- vData[[6]]
+     
+  } else{
+    
+    selAdmin1 <- 1
   }
-  
-  
-  selectizeInput("inSiteAdmin1", label= "Site, first-level administrative division name", multiple = TRUE,
+  #print(selAdmin1)
+  # selectizeInput("inSiteType", label="Site type", 
+  #                choices = mchoices, 
+  #                multiple  = TRUE , 
+  #                options = list(maxItems = 1, placeholder ="Select one..."), selected= vData[[3]] ),
+  # 
+  selectizeInput("inSiteAdmin1", label= "Site, first-level administrative division name", 
                  choices = admin1,
-                 selected= 1,
-                 options = list(maxItems = 1, placeholder = 'Select admin 1'))
+                 multiple = TRUE,
+                 options = list(maxItems = 1, placeholder = 'Select admin 1'), selected= selAdmin1)
 })
 
 
@@ -43,14 +51,28 @@ output$fbsites_ui_admin2 <-renderUI({
   admin1 <- input$inSiteAdmin1
   admin2 <- get_admin_agrofims(geodb, country = cntry, admin1 = admin1)
 
-
+  if (input$siteClickId %like% "siteEdit"){
+    
+    row_to_edit = as.numeric(gsub("siteEdit_","", input$siteClickId))
+    
+    vData <- dt$trialSites[row_to_edit,]
+    
+    selAdmin2 <- vData[[7]]
+    
+  } else{
+    
+    selAdmin2<- 1
+  }
+  
+  
+  
   if(is.na(admin2) && is.null(admin1)){
     textInput("inSiteAdmin2_text", label = "Site, second-level administrative division name", value= "") #)vData[[7]])
   } else {
 
     selectizeInput("inSiteAdmin2", label= "Site, second-level administrative division name", multiple = TRUE,
                    choices = admin2,
-                   selected= 1,
+                   selected= selAdmin2,
                    options = list(maxItems = 1, placeholder = 'Select admin 2'))
   }
 
@@ -68,6 +90,20 @@ output$fbsites_ui_admin3 <-renderUI({
                                 admin1 = admin1,
                                 admin2 = admin2)
 
+  
+  # if (input$siteClickId %like% "siteEdit"){
+  #   
+  #   row_to_edit = as.numeric(gsub("siteEdit_","", input$siteClickId))
+  #   
+  #   vData <- dt$trialSites[row_to_edit,]
+  #   
+  #   selAdmin3 <- vData[[8]]
+  #   
+  # } else{
+  #   
+  #   selAdmin3<- 1
+  # }
+  
 
   if(is.na(admin3)){
   textInput("inSiteAdmin3_text", label = "Site, third-level administrative division name", value= "") #)vData[[7]])
@@ -93,6 +129,23 @@ output$fbsites_ui_admin4 <-renderUI({
                                 admin1 = admin1,
                                 admin2 = admin2,
                                 admin3 = admin3)
+  
+  # if (input$siteClickId %like% "siteEdit"){
+  #   
+  #   row_to_edit = as.numeric(gsub("siteEdit_","", input$siteClickId))
+  #   
+  #   vData <- dt$trialSites[row_to_edit,]
+  #   
+  #   selAdmin4 <- vData[[9]]
+  #   
+  # } else{
+  #   
+  #   selAdmin4 <- 1
+  # }
+  
+  
+  
+  
   if(is.na(admin4)){
 
   textInput("inSiteAdmin4_text", label = "Site, fourth-level administrative division name", value= "") #)vData[[7]])
@@ -248,9 +301,9 @@ observeEvent(input$btCreateSite, {
 
     mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
     insQry=  paste0("insert into user_sites ( " ,
-                    " var1, var2, var3, var4, var5, var6, var7, var8, var9, var10 ,var11, var12, created, user_id) values('")
+                    " var1, var2, var3, var4, var5, var6, var7, var8, var9, var10 ,var11, var12, var13, created, user_id) values('")
     insQry= paste0(insQry, vSiteType)
-    insQry= paste(insQry, vSiteNama, vCountry, vAdmin1, vAdmin2, vAdmin3, vElevation, vLatitud, vLongitude, vNearest, vVillage, vSiteId,  createDate, sep="','")
+    insQry= paste(insQry, vSiteNama, vCountry, vAdmin1, vAdmin2, vAdmin3, vElevation, vLatitud, vLongitude, vVillage,  vNearest, vSiteId, vAdmin4, createDate, sep="','")
     insQry= paste0(insQry, "', " , USER$id, ")")
     qryUsers = dbSendQuery(mydb, insQry)
     dbDisconnect(mydb)
@@ -307,7 +360,7 @@ observeEvent(input$btUpdateSite, {
     flag_admin4 <- get_admin4_agrofims(geodb, country_input = vCountry, admin1_input = vadmin1, admin2_input = vadmin2, admin3_input = vadmin3)
 
     if(is.na(flag_admin4)){
-      vAdmin4   <- input$inSiteAdmin4       #var5
+      vAdmin4   <- input$inSiteAdmin4       #var13
     } else {
       vAdmin4   <- input$inSiteAdmin4_text
     }
@@ -364,9 +417,19 @@ observeEvent(input$btUpdateSite, {
                     " var9 = '", vLongitude, "', ",
                     " var10 = '", vVillage, "', ",
                     " var11 = '", vNearest, "', ",
+                    " var13= '", vadmin4, "', ",
                     " modified = '", modifyDate, "' ",
                     "where user_id = " , USER$id, " " ,
                     "and var12 = '", vSiteId , "'")
+                    # " var6 = '", vAdmin4, "', ",
+                    # " var7 = '", vElevation, "', ",
+                    # " var8 = '", vLatitud, "', ",
+                    # " var9 = '", vLongitude, "', ",
+                    # " var10 = '", vVillage, "', ",
+                    # " var11 = '", vNearest, "', ",
+                    # " modified = '", modifyDate, "' ",
+                    # "where user_id = " , USER$id, " " ,
+                    # "and var12 = '", vSiteId , "'")
 
     qryUsers = dbSendQuery(mydb, updQry)
     dbDisconnect(mydb)
@@ -424,6 +487,7 @@ updateSiteRDS <- function(){
                    var9,
                    var10,
                    var11,
+                   var13,
                    created
                    FROM user_sites
                    order by created DESC, id DESC")
@@ -432,7 +496,7 @@ updateSiteRDS <- function(){
   df_allSites <- data.frame(allSites)
   # "/home/obenites/HIDAP_SB_1.0.0/hidap/inst/hidap_agrofims"
 
-  headers_sites <- c("id", "shortn", "Type" , "local", "cntry", "adm1", "adm2", "admin3", "elev", "latd" , "lond", "village", "nearpop" ,"date_creation")
+  headers_sites <- c("id", "shortn", "Type" , "local", "cntry", "adm1", "adm2", "admin3", "elev", "latd" , "lond", "village", "nearpop" , "admin4", "date_creation")
   names(df_allSites) <- headers_sites
   path <- fbglobal::get_base_dir()
   path <- file.path(path, "table_sites_agrofims.rds")
@@ -530,6 +594,7 @@ updTrialSites <- function() {
                    var9,
                    var10,
                    var11,
+                   var13,
                    created
                    FROM user_sites
                    WHERE user_id = ", USER$id,

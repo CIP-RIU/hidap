@@ -1,4 +1,4 @@
-columnNames <- c("id", "Site ID", "Type", "Name", "Country","First level admin", "Second level admin", "Third level admin", "Elevation", "Latitude", "Longitude", "Nearest populated place", "Village",  "Creation date")
+columnNames <- c("id", "Site ID", "Type", "Name", "Country","First level admin", "Second level admin", "Third level admin", "Elevation", "Latitude", "Longitude", "Village", "Nearest populated place", "Fourth level admin" ,"Creation date")
 
 dt <- reactiveValues()
 
@@ -113,7 +113,7 @@ uiTrialSiteNew <- function(pData = NULL){
 
           selectizeInput("inSiteCountry", label="Country name", multiple = TRUE,
                          choices = unique(geodb$NAME_0),
-                         selected= 1,
+                         selected= vData[[5]],
                          options = list(maxItems = 1, placeholder = 'Select country... ')),
 
           #textInput("inSiteAdmin1", label = "Site, first-level administrative division name", value=vData[[6]]),
