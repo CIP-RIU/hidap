@@ -126,7 +126,7 @@ uiTrialSiteNew <- function(pData = NULL){
 
           #textInput("inSiteAdmin2", label = "Site, second-level administrative division name", value=vData[[7]]),
           #textInput("inSiteVillage", label = "Village name", value=vData[[8]]),
-          textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[12]]),
+          textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[13]]),
 
           # radioButtons("select_geosystem", label = h4("Type of coordinates system",style = "font-family: 'Arial', cursive;
           #                                       font-weight: 500; line-height: 1.1; color: #4d3a7d;"),
@@ -165,10 +165,10 @@ uiTrialSiteNew <- function(pData = NULL){
           #   ),
 
           #textInput("inSiteElevation", label = "Site elevation (m.a.s.l.)", value=vData[[9]]),
-          shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = 0 ),
-          shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = 0 ),
+          shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[9]] ),
+          shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = vData[[10]] ),
           #textInput("inSiteLatitude", label = "Site latitude (in decimal degrees)", value=vData[[10]]),
-          shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = 0 ),
+          shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = vData[[11]] ),
           #textInput("inSiteLongitude", label = "Site longitude (in decimal degrees)", value=vData[[11]]),
 
           # selectizeInput("inSiteVegetation", label="Vegetation surrounding the experiment site", multiple = TRUE, selected =  veg,
