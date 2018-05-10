@@ -140,6 +140,8 @@ observeEvent(input$checkLogin, {
         USER$lname <- data1[Id.username, "lname"]
         USER$org <- data1[Id.username, "organization"]
         USER$country <- data1[Id.username, "country"]
+
+        fbdesign::setUserSession(T, USER$username, USER$id)
         removeModal()
         output$userLoggedText <- renderText(paste("Hello,", USER$fname, sep=" "))
       }
@@ -452,7 +454,9 @@ observeEvent(input$btLogIn, {
 
 observeEvent(input$btLogOut, {
   # updateTabItems(session, "tabs", "dashboard")
+  fbdesign::setUserSession(logged = F, NULL, NULL)
   USER$Logged <- FALSE
+
 })
 
 ###########################################################################################################
