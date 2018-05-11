@@ -231,7 +231,7 @@ observe({
                 ((!is.null(input$inSiteAdmin5) && str_trim(input$inSiteAdmin5, side = "both")!="")  ||
                    (!is.null(input$inSiteAdmin5_text) && str_trim(input$inSiteAdmin5_text, side = "both")!="") ) &&
 
-                !is.null(input$inSiteNearestPlace) && str_trim(input$inSiteNearestPlace, side = "both")!= "" &&
+                # !is.null(input$inSiteNearestPlace) && str_trim(input$inSiteNearestPlace, side = "both")!= "" &&
                 !is.null(input$inSiteLatitude) && str_trim(input$inSiteLatitude, side = "both")!= ""  &&
                 !is.null(input$inSiteLongitude) && str_trim(input$inSiteLongitude, side = "both")!= ""
 

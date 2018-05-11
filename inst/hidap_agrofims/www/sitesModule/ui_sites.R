@@ -18,7 +18,9 @@ uiTrialScreenMain <- function(){
         title = tagList(shiny::icon("list-ol"), "List Site information"),
         status = "primary", solidHeader = TRUE,
         collapsible = TRUE, width = 12,
-        actionButton("btNewTrialSite", "Add New Site",  style="color: #fff; background-color: #35b872;", icon = icon("plus-circle")),
+        
+        # actionButton("btNewTrialSite", "Add New Site",  style="color: #fff; background-color: #35b872;", icon = icon("plus-circle")),
+        actionButton("btNewTrialSite", "Add New Site",  class = "btn-primary",style="color: #fff;", icon = icon("plus-circle")),
         # shinysky::shinyalert("alert_SI_created", FALSE, auto.close.after = 4),
         br(),br(),br(),
         dataTableOutput("Sites_table")
@@ -27,7 +29,7 @@ uiTrialScreenMain <- function(){
         title = "Map",
         # title = tagList(shiny::icon("list-ol"), "List Site information"),
         status = "primary", solidHeader = TRUE, collapsible = TRUE, width = 12,
-        actionButton("btShowMap", "View sites",  style="color: #fff; background-color: #35b872;"),br(), br(),
+        actionButton("btShowMap", "View sites",  class = "btn-primary",style="color: #fff;"),br(), br(),
         column( width = 12,
                 leafletOutput("mymap1a", "100%", "550px")
         )
@@ -178,7 +180,7 @@ uiTrialSiteNew <- function(pData = NULL){
 
 
           useShinyalert(),
-          actionButton(strCreateId, strCreate, style="color: #fff; background-color: #35b872;"),
+          actionButton(strCreateId, strCreate, class = "btn-primary",style="color: #fff;"),
           actionButton("goToMainSiteScreen", "Cancel")#,
 
 
