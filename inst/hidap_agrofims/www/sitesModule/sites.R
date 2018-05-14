@@ -225,11 +225,11 @@ observe({
                 ((!is.null(input$inSiteAdmin3) && str_trim(input$inSiteAdmin3, side = "both")!="") ||
                     (!is.null(input$inSiteAdmin3_text) && str_trim(input$inSiteAdmin3_text, side = "both")!="") ) &&
 
-                ((!is.null(input$inSiteAdmin4) && str_trim(input$inSiteAdmin4, side = "both")!="") ||
-                   (!is.null(input$inSiteAdmin4_text) && str_trim(input$inSiteAdmin4_text, side = "both")!="") ) &&
+                # ((!is.null(input$inSiteAdmin4) && str_trim(input$inSiteAdmin4, side = "both")!="") ||
+                #    (!is.null(input$inSiteAdmin4_text) && str_trim(input$inSiteAdmin4_text, side = "both")!="") ) &&
 
-                ((!is.null(input$inSiteAdmin5) && str_trim(input$inSiteAdmin5, side = "both")!="")  ||
-                   (!is.null(input$inSiteAdmin5_text) && str_trim(input$inSiteAdmin5_text, side = "both")!="") ) &&
+                # ((!is.null(input$inSiteAdmin5) && str_trim(input$inSiteAdmin5, side = "both")!="")  ||
+                #    (!is.null(input$inSiteAdmin5_text) && str_trim(input$inSiteAdmin5_text, side = "both")!="") ) &&
 
                 # !is.null(input$inSiteNearestPlace) && str_trim(input$inSiteNearestPlace, side = "both")!= "" &&
                 !is.null(input$inSiteLatitude) && str_trim(input$inSiteLatitude, side = "both")!= ""  &&
@@ -480,7 +480,7 @@ updateMarkers <- function(){
     leafletProxy("mymap1a") %>% clearMarkers()
     for (i in 1:len){
       leafletProxy("mymap1a") %>%
-        addMarkers(lng=as.numeric(dt$trialSites[i,11]), lat=as.numeric(dt$trialSites[i,10]), popup="aaaaa")
+        addMarkers(lng=as.numeric(dt$trialSites[i,11]), lat=as.numeric(dt$trialSites[i,10]))
     }
   })
 
