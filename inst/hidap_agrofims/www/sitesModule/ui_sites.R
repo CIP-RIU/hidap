@@ -1,4 +1,4 @@
-columnNames <- c("id", "Site ID", "Type", "Name", "Country","First level admin", "Second level admin", "Third level admin", "Elevation", "Latitude", "Longitude", "Village", "Nearest populated place", "Fourth level admin" ,"Creation date")
+columnNames <- c("id", "Site ID", "Type", "Name", "Country","First level admin", "Second level admin", "Third level admin","Fourth level admin" , "Village", "Nearest populated place", "Elevation", "Latitude", "Longitude","Creation date")
 
 dt <- reactiveValues()
 
@@ -56,6 +56,7 @@ uiTrialScreenMain <- function(){
 output$Sites_table <- renderDataTable({
 
     DT=dt$trialSites
+    print(dt$trialSites)
     if(nrow(dt$trialSites) > 0){
       DT[["Actions"]]<-
         paste0('
@@ -73,7 +74,7 @@ output$Sites_table <- renderDataTable({
               options = list(
                 scrollX = TRUE,
                 pageLength = 10,
-                columnDefs = list(list(visible=FALSE, targets=c(1, 8, 9, 10, 11)))
+                columnDefs = list(list(visible=FALSE, targets=c(1, 12, 13, 14, 15)))
               ))
 
   # })

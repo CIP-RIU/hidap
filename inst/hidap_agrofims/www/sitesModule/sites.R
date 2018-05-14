@@ -213,9 +213,10 @@ observeEvent(input$goToMainSiteScreen, {
 observe({
 
   #After all this conditions has been made, the submit button will appear to save the information
-  toggleState("btCreateSite", !is.null(input$inSiteCountry) && str_trim(input$inSiteCountry, side = "both")!= "" &&
+  toggleState("btCreateSite", !
+                is.null(input$inSiteCountry) && str_trim(input$inSiteCountry, side = "both")!= "" &&
 
-                !is.null(input$inSiteName) && str_trim(input$inSiteName, side = "both")!= "" &&
+                # !is.null(input$inSiteName) && str_trim(input$inSiteName, side = "both")!= "" &&
 
                   !is.null(input$inSiteAdmin1) && str_trim(input$inSiteAdmin1, side = "both")!= "" &&
 
@@ -223,7 +224,7 @@ observe({
                    (!is.null(input$inSiteAdmin2_text) && str_trim(input$inSiteAdmin2_text, side = "both")!="")) &&
 
                 ((!is.null(input$inSiteAdmin3) && str_trim(input$inSiteAdmin3, side = "both")!="") ||
-                    (!is.null(input$inSiteAdmin3_text) && str_trim(input$inSiteAdmin3_text, side = "both")!="") ) &&
+                    (!is.null(input$inSiteAdmin3_text) && str_trim(input$inSiteAdmin3_text, side = "both")!=""))
 
                 # ((!is.null(input$inSiteAdmin4) && str_trim(input$inSiteAdmin4, side = "both")!="") ||
                 #    (!is.null(input$inSiteAdmin4_text) && str_trim(input$inSiteAdmin4_text, side = "both")!="") ) &&
@@ -232,8 +233,8 @@ observe({
                 #    (!is.null(input$inSiteAdmin5_text) && str_trim(input$inSiteAdmin5_text, side = "both")!="") ) &&
 
                 # !is.null(input$inSiteNearestPlace) && str_trim(input$inSiteNearestPlace, side = "both")!= "" &&
-                !is.null(input$inSiteLatitude) && str_trim(input$inSiteLatitude, side = "both")!= ""  &&
-                !is.null(input$inSiteLongitude) && str_trim(input$inSiteLongitude, side = "both")!= ""
+                # !is.null(input$inSiteLatitude) && str_trim(input$inSiteLatitude, side = "both")!= ""  &&
+                # !is.null(input$inSiteLongitude) && str_trim(input$inSiteLongitude, side = "both")!= ""
 
   )
 })
@@ -358,16 +359,18 @@ observeEvent(input$btUpdateSite, {
     # vAdmin4   <- input$inSiteAdmin4_text
 
     flag_admin2 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1 )
-
-    if(is.na(flag_admin2)){
+    
+    if(!is.na(flag_admin2)){
       vAdmin2   <- input$inSiteAdmin2       #var
     } else {
       vAdmin2   <- input$inSiteAdmin2_text
     }
+    
+    print(paste0(vAdmin2, " admin 2"))
 
     flag_admin3 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1, admin2 = vAdmin2)
 
-    if(is.na(flag_admin3)){
+    if(!is.na(flag_admin3)){
       vAdmin3   <- input$inSiteAdmin3       #var5
     } else {
       vAdmin3   <- input$inSiteAdmin3_text
@@ -375,7 +378,7 @@ observeEvent(input$btUpdateSite, {
 
     flag_admin4 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1, admin2 = vAdmin2, admin3 = vAdmin3)
 
-    if(is.na(flag_admin4)){
+    if(!is.na(flag_admin4)){
       vAdmin4   <- input$inSiteAdmin4       #var13
     } else {
       vAdmin4   <- input$inSiteAdmin4_text
@@ -383,7 +386,7 @@ observeEvent(input$btUpdateSite, {
 
     flag_admin5 <- get_admin_agrofims(geodb, country = vCountry,  admin1 = vAdmin1, admin2 = vAdmin2, admin3 = vAdmin3, admin4 = vAdmin4)
 
-    if(is.na(flag_admin5)){
+    if(!is.na(flag_admin5)){
       vVillage   <- input$inSiteAdmin5       #var10
     } else {
       vVillage   <- input$inSiteAdmin5_text  #var10
@@ -450,6 +453,7 @@ observeEvent(input$btUpdateSite, {
     qryUsers = dbSendQuery(mydb, updQry)
     dbDisconnect(mydb)
     updateSiteRDS()
+    shinyalert("Success", "Site was successfully updated", type = "success")
     output$trialScreen <- renderUI({
       uiTrialScreenMain()
     })
@@ -551,6 +555,8 @@ observeEvent(input$siteClick,{
     # dt$trialSites <- dt$trialSites[-row_to_delete, ]
 
     dt$trialSites <- deleteSite(row_to_delete)
+    names(dt$trialSites) <- columnNames
+    shinyalert("Success", "Site was successfully deleted", type = "success")
     updateMarkers()
   }
 })
@@ -606,12 +612,13 @@ updTrialSites <- function() {
                    var4,
                    var5,
                    var6,
+                   var13,
+                   var10,
+                   var11,
                    var7,
                    var8,
                    var9,
-                   var10,
-                   var11,
-                   var13,
+                   
                    created
                    FROM user_sites
                    WHERE user_id = ", USER$id,
