@@ -36,6 +36,7 @@ uiTrialScreenMain <- function(){
       ),
       box(solidHeader = FALSE, width = 12)
   )
+    updateMarkers()
 
 }
 
