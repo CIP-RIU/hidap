@@ -32,32 +32,24 @@ uiTrialScreenMain <- function(){
         actionButton("btShowMap", "View sites",  class = "btn-primary",style="color: #fff;"),br(), br(),
         column( width = 12,
                 leafletOutput("mymap1a", "100%", "550px")
+                # leaflet() %>%
+                #   addTiles() %>%  # Add default OpenStreetMap map tiles
+                #   # addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
+                #   setView(lng = -4.04296, lat = 16.30796, zoom = 2) #%>%
         )
+        
       ),
       box(solidHeader = FALSE, width = 12)
   )
-    updateMarkers()
-
 }
 
-# map1a = leaflet() %>%
-#   addTiles("https://{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png") %>%
-#   setView(lng = -4.04296, lat = 16.30796, zoom = 2) #%>%
-#
-# # Muestra mapa "1a"
-# output$mymap1a <- renderLeaflet(map1a)
 
-# output$mymap1a <- renderLeaflet(
-#   leaflet() %>%
-#     addTiles() %>%  # Add default OpenStreetMap map tiles
-#     # addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
-#     setView(lng = -4.04296, lat = 16.30796, zoom = 2) #%>%
-# )
+
 
 output$Sites_table <- renderDataTable({
 
     DT=dt$trialSites
-    print(dt$trialSites)
+    
     if(nrow(dt$trialSites) > 0){
       DT[["Actions"]]<-
         paste0('
@@ -91,7 +83,7 @@ uiTrialSiteNew <- function(pData = NULL){
   boxIcon <- "plus-circle"
   veg <- NULL
   if(is.null(pData)){
-    vData <- vector("list", 13)
+    vData <- vector("list", 15)
   }
   else{
     vData <- pData
@@ -130,7 +122,7 @@ uiTrialSiteNew <- function(pData = NULL){
 
           #textInput("inSiteAdmin2", label = "Site, second-level administrative division name", value=vData[[7]]),
           #textInput("inSiteVillage", label = "Village name", value=vData[[8]]),
-          textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[13]]),
+          textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[11]]),
 
           # radioButtons("select_geosystem", label = h4("Type of coordinates system",style = "font-family: 'Arial', cursive;
           #                                       font-weight: 500; line-height: 1.1; color: #4d3a7d;"),
@@ -169,10 +161,10 @@ uiTrialSiteNew <- function(pData = NULL){
           #   ),
 
           #textInput("inSiteElevation", label = "Site elevation (m.a.s.l.)", value=vData[[9]]),
-          shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[9]] ),
-          shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = vData[[10]] ),
+          shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[12]] ),
+          shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = vData[[13]] ),
           #textInput("inSiteLatitude", label = "Site latitude (in decimal degrees)", value=vData[[10]]),
-          shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = vData[[11]] ),
+          shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = vData[[14]] ),
           #textInput("inSiteLongitude", label = "Site longitude (in decimal degrees)", value=vData[[11]]),
 
           # selectizeInput("inSiteVegetation", label="Vegetation surrounding the experiment site", multiple = TRUE, selected =  veg,

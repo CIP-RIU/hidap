@@ -546,6 +546,9 @@ ui <- dashboardPage(
 ############################################################
 
 sv <- function(input, output,  session) ({
+  
+  session$userData$logged <- F
+  session$userData$userId <- NULL
 
   USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
 

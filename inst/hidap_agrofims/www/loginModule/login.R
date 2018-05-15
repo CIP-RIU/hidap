@@ -133,6 +133,7 @@ observeEvent(input$checkLogin, {
     if (length(Id.username) == 1) {
       if (PASSWORD[Id.username, 2] == Password) {
         USER$Logged <- TRUE
+       
         # USER$list <- paste(data1[,4], data1[,5], paste0("<", data1[,2], ">"))
         USER$id <- data1[Id.username, "id"]
         USER$username <- data1[Id.username, "username"]
@@ -141,7 +142,7 @@ observeEvent(input$checkLogin, {
         USER$org <- data1[Id.username, "organization"]
         USER$country <- data1[Id.username, "country"]
 
-        fbdesign::setUserSession(T, USER$username, USER$id)
+        # fbdesign::setUserSession(T, USER$username, USER$id)
         removeModal()
         output$userLoggedText <- renderText(paste("Hello,", USER$fname, sep=" "))
       }
@@ -160,7 +161,10 @@ observeEvent(input$checkLogin, {
 ###########################################################################################################
 observe({
   if(USER$Logged == TRUE) {
-
+    # session$user <- USER$id
+    session$userData$logged <- TRUE
+    session$userData$userId <- USER$id
+    
     # menu to be shown with hidap network options when the users logs in
     output$menuUser <- renderMenu({
       sidebarMenu(id ="networkMenu",
@@ -231,6 +235,9 @@ observe({
     USER$lname <- NULL
     USER$org <- NULL
     USER$country <- NULL
+    # session$user <- NULL
+    session$userData$logged <- F
+    session$userData$userId <- NULL
 
     hideTab(inputId = "tabs", target = "Foo")
 
@@ -454,7 +461,7 @@ observeEvent(input$btLogIn, {
 
 observeEvent(input$btLogOut, {
   # updateTabItems(session, "tabs", "dashboard")
-  fbdesign::setUserSession(logged = F, NULL, NULL)
+  # fbdesign::setUserSession(logged = F, NULL, NULL)
   USER$Logged <- FALSE
 
 })

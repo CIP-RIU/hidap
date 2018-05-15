@@ -136,7 +136,7 @@ output$fbsites_ui_admin4 <-renderUI({
 
     vData <- dt$trialSites[row_to_edit,]
 
-    selAdmin4 <- vData[[14]] #admin4
+    selAdmin4 <- vData[[9]] #admin4
 
   } else{
 
@@ -181,7 +181,7 @@ output$fbsites_ui_admin5 <-renderUI({
 
     vData <- dt$trialSites[row_to_edit,]
 
-    selAdmin5 <- vData[[12]] #admin5
+    selAdmin5 <- vData[[10]] #admin5
 
   } else{
     selAdmin5 <- ""
@@ -205,6 +205,8 @@ output$fbsites_ui_admin5 <-renderUI({
 observeEvent(input$goToMainSiteScreen, {
   output$trialScreen <- renderUI({
     uiTrialScreenMain()
+    # click("btShowMap")
+    
   })
 
 })
@@ -468,6 +470,7 @@ observeEvent(input$btUpdateSite, {
 
 
 observeEvent(input$btShowMap, {
+  print("clicked")  
   output$mymap1a <- renderLeaflet(
     leaflet() %>%
       addTiles() %>%  # Add default OpenStreetMap map tiles
@@ -484,11 +487,34 @@ updateMarkers <- function(){
     leafletProxy("mymap1a") %>% clearMarkers()
     for (i in 1:len){
       leafletProxy("mymap1a") %>%
-        addMarkers(lng=as.numeric(dt$trialSites[i,11]), lat=as.numeric(dt$trialSites[i,10]))
+        addMarkers(lng=as.numeric(dt$trialSites[i,13]), lat=as.numeric(dt$trialSites[i,14]))
     }
   })
 
 }
+
+# df1 = data.frame(
+#   lat = dt$trialSites[,13],
+#   lng = dt$trialSites[,14]
+# )
+# 
+#   output$mymap1a <- renderLeaflet(
+#     
+#     print(df1),
+#     leaflet() %>%
+#           addTiles(df1) %>%  # Add default OpenStreetMap map tiles
+#           # addMarkers(data = df)  %>%
+#           setView(lng = -4.04296, lat = 16.30796, zoom = 2) #%>%
+#   )
+
+  
+  
+
+
+
+
+
+
 
 updateSiteRDS <- function(){
   mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
