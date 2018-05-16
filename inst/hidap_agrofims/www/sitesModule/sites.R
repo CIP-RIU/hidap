@@ -319,11 +319,14 @@ observeEvent(input$btCreateSite, {
     createDate <-as.character(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
     mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
-    insQry=  paste0("insert into user_sites ( " ,
-                    " var1, var2, var3, var4, var5, var6, var7, var8, var9, var10 ,var11, var12, var13, created, user_id) values('")
+    # insQry=  paste0("insert into user_sites ( " ,
+    #                 " var1, var2, var3, var4, var5, var6, var7, var8, var9, var10 ,var11, var12, var13, created, user_id) values('")
+    insQry=  paste0('insert into user_sites ( ' ,
+                    ' var1, var2, var3, var4, var5, var6, var7, var8, var9, var10 ,var11, var12, var13, created, user_id) values("')
     insQry= paste0(insQry, vSiteType)
-    insQry= paste(insQry, vSiteNama, vCountry, vAdmin1, vAdmin2, vAdmin3, vElevation, vLatitud, vLongitude, vVillage,  vNearest, vSiteId, vAdmin4, createDate, sep="','")
-    insQry= paste0(insQry, "', " , USER$id, ")")
+    insQry= paste(insQry, vSiteNama, vCountry, vAdmin1, vAdmin2, vAdmin3, vElevation, vLatitud, vLongitude, vVillage,  vNearest, vSiteId, vAdmin4, createDate, sep="\",\"")
+    # insQry= paste0(insQry, "', " , USER$id, ")")
+    insQry= paste0(insQry, "\", " , USER$id, ")")
     qryUsers = dbSendQuery(mydb, insQry)
     dbDisconnect(mydb)
     updateSiteRDS()
@@ -427,21 +430,21 @@ observeEvent(input$btUpdateSite, {
 
     mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
     updQry=  paste0("update user_sites set" ,
-                    " var1 = '", vSiteType, "', ",
-                    " var2 = '", vSiteName, "', ",
-                    " var3 = '", vCountry, "', ",
-                    " var4 = '", vAdmin1, "', ",
-                    " var5 = '", vAdmin2, "', ",
-                    " var6 = '", vAdmin3, "', ",
-                    " var7 = '", vElevation, "', ",
-                    " var8 = '", vLatitud, "', ",
-                    " var9 = '", vLongitude, "', ",
-                    " var10 = '", vVillage, "', ",
-                    " var11 = '", vNearest, "', ",
-                    " var13= '", vAdmin4, "', ",
-                    " modified = '", modifyDate, "' ",
+                    " var1 = \"", vSiteType, "\", ",
+                    " var2 = \"", vSiteName, "\", ",
+                    " var3 = \"", vCountry, "\", ",
+                    " var4 = \"", vAdmin1, "\", ",
+                    " var5 = \"", vAdmin2, "\", ",
+                    " var6 = \"", vAdmin3, "\", ",
+                    " var7 = \"", vElevation, "\", ",
+                    " var8 = \"", vLatitud, "\", ",
+                    " var9 = \"", vLongitude, "\", ",
+                    " var10 = \"", vVillage, "\", ",
+                    " var11 = \"", vNearest, "\", ",
+                    " var13= \"", vAdmin4, "\", ",
+                    " modified = \"", modifyDate, "\" ",
                     "where user_id = " , USER$id, " " ,
-                    "and var12 = '", vSiteId , "'")
+                    "and var12 = \"", vSiteId , "\"")
                     # " var6 = '", vAdmin4, "', ",
                     # " var7 = '", vElevation, "', ",
                     # " var8 = '", vLatitud, "', ",
