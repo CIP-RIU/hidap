@@ -1,6 +1,7 @@
 #library(d3heatmap)
 library(shinysky)
 library(data.table)
+library(httr)
 #library(shinyTree)
 
 #library(doBy)
@@ -62,7 +63,6 @@ library(rlist)
 #library(remotes)
 #library(fbupdate)
 library(tibble)
-library(shinyjs)
 library(brapi)
 
 library(fbdesign)
@@ -78,7 +78,11 @@ library(brapi)
 library(dplyr)
 library(tidyr)
 
+library(shinyjs) 
+library(shinyalert)
 
+print("WD de APP")
+getwd()
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 
