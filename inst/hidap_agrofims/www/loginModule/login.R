@@ -205,6 +205,15 @@ observe({
                  menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
                  menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
         ),
+        
+        menuItem("Single Trial Analysis", icon = icon("chart-bar"),
+                 #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
+                 menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("file-text-o"))#,
+                 #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
+                 
+                 #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+        ),
+        
 
         menuItem("Documentation",  icon = icon("copy")
         ),
@@ -272,6 +281,14 @@ observe({
                      menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
             ),
 
+            menuItem("Single Trial Analysis", icon = icon("chart-bar"),
+                     #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
+                     menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("file-text-o"))#,
+                     #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
+                     
+                     #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+            ),
+            
             menuItem("Documentation",  icon = icon("copy")
             ),
 

@@ -1,4 +1,6 @@
 #library(d3heatmap)
+library(devtools)
+install_github("jrowen/rhandsontable", ref = "v0.3.1")
 library(shinysky)
 library(data.table)
 library(httr)
@@ -80,6 +82,7 @@ library(tidyr)
 
 library(shinyjs) 
 library(shinyalert)
+library(stringi)
 
 print("WD de APP")
 getwd()

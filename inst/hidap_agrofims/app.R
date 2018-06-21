@@ -134,12 +134,12 @@ ui <- dashboardPage(
 
 
                      br(),
-                     sidebarMenuOutput("menu") #menu is render in login.R when users logs in
+                     sidebarMenuOutput("menu")#, #menu is render in login.R when users logs in
                      # menuItem("Site information", tabName = "trialSite", icon = icon("map-marker")),
                      # menuItem("Fieldbook", icon = icon("book"),
                      #          #menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
                      #          menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file")),
-                     #
+                     # 
                      #          menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
                      #          menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
                      #          # menuSubItem("Data transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
@@ -161,22 +161,22 @@ ui <- dashboardPage(
                      #                   #menuSubItem("Distribution Data", tabName = "distributionDB", icon = icon("database"))
                      #          ),
                      #
-                     #          menuItem("Fieldbook management",
-                     #                   #menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
-                     #                   menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file")),
-                     #
-                     #                   menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
-                     #                   menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
-                     #                   # menuSubItem("Data transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
-                     #          )#,
-                     #
-                     #          # menuItem("Single Trial Analysis",
-                     #          #          #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-                     #          #          menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
-                     #          #          menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
-                     #          #
-                     #          #          #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
-                     #          # ),
+                              # menuItem("Fieldbook management",
+                              #          #menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
+                              #          menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file")),
+                              # 
+                              #          menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
+                              #          menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
+                              #          # menuSubItem("Data transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+                              # ),
+
+                              # menuItem("Single Trial Analysis",
+                              #          #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
+                              #          menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
+                              #          #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
+                              # 
+                              #          #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+                              # )#,
                      #          #
                      #          # menuItem("PVS Trial Analysis",
                      #          #          menuSubItem("PVS report", tabName = "singlePVS", icon = icon("calculator"))#,
@@ -214,7 +214,7 @@ ui <- dashboardPage(
                      #          # menuSubItem("Check updates", tabName = "updateHidap",icon = icon("refresh"))#,
                      # ),
                      #
-                     # menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)
+                      #menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)
 
                    )
 
@@ -419,7 +419,7 @@ ui <- dashboardPage(
               br(),
               br(),
 
-              h2("HIDAP AgroFIMS v0.0.16"),
+              h2("HIDAP AgroFIMS v0.0.17"),
               p(class = "text-muted", style="text-align:justify",
                 #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
                 shiny::includeHTML("www/about_hidap.txt")
@@ -488,8 +488,8 @@ ui <- dashboardPage(
       # # Material List Module ----------------------------------------------------
       #
       # fbmlist::generate_ui(name = "generateList"),
-        fbmlist::managerlist_ui_agrofims(name ="manageListAgrofims"),
-        fbmlist::generate_ui_agrofims(name = "generateListAgrofims")
+        #fbmlist::managerlist_ui_agrofims(name ="manageListAgrofims"),
+        #fbmlist::generate_ui_agrofims(name = "generateListAgrofims")
 
       # fbmlist::managerlist_ui(name = "manageList"),
       # fbmlist::createlist_ui(name = "createList"),
@@ -498,7 +498,7 @@ ui <- dashboardPage(
 
       # #brapps::fbasingle_ui("SingleChart"),
       #
-      # fbanalysis::single_ui(name="singleAnalysisReport"),
+       fbanalysis::single_hdagrofims_ui(name="singleAnalysisReportAgrofims")#,
       # fbanalysis::genetic_ui(name="geneticAnalysisReport"),
       #
       #
@@ -610,7 +610,7 @@ sv <- function(input, output,  session) ({
   fbdesign::server_design_agrofims(input, output, session, values)
   # fbdesign::server_design_big(input, output, session, values)
   # fbopenbooks::fbopenbooks_server(input, output, session, values)
-  # fbanalysis::single_server(input, output, session, values)
+  fbanalysis::single_hdagrofims_server(input, output, session, values)
   # fbanalysis::dtr_server(input, output, session, values)
   #
   # fbanalysis::met_server(input, output, session, values)
