@@ -69,7 +69,7 @@ library(brapi)
 
 library(fbdesign)
 library(ggplot2)
-#library(st4gi)
+#library(st4gi/)
 #library(pepa)
 library(readxl)
 library(eda4plant)
@@ -83,6 +83,10 @@ library(tidyr)
 library(shinyjs) 
 library(shinyalert)
 library(stringi)
+
+#active URL
+library(shinyURL)
+
 
 print("WD de APP")
 getwd()
@@ -102,12 +106,15 @@ ui <- dashboardPage(
   dashboardHeader(title = "HIDAP", titleWidth = "250px"
                   #tags$script(HTML("$('body').addClass('sidebar-mini');"))
   ),#end Header
+  
+ 
   dashboardSidebar(width = "250px",
 
                    #div(style="margin-right: auto;",img(src = "Logo1.png", width = "250")),
                    br(),
                    div(img(src="hidapicon.png", width = "150px"), style="text-align: center;"),
 
+                   shinyURL.ui(display = FALSE),
                    #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
                    sidebarMenu(
                      id = "tabs",
@@ -368,6 +375,7 @@ ui <- dashboardPage(
 
 sv <- function(input, output, session) ({
 
+  shinyURL.server()
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
   withProgress(message = 'Loading HiDAP', value = 0, {
