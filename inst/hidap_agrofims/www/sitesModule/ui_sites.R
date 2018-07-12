@@ -101,28 +101,46 @@ uiTrialSiteNew <- function(pData = NULL){
     title = tagList(shiny::icon(boxIcon), boxTitle),
     status = "primary", solidHeader = TRUE,
     collapsible = TRUE, width = 12,
-    column(width = 6,
-          disabled(textInput("inSiteID", label="Site ID", value = vData[[2]] )),
-          selectizeInput("inSiteType", label="Site type", choices = mchoices, multiple  = TRUE , options = list(maxItems = 1, placeholder ="Select one..."), selected= vData[[3]] ),
-          textInput("inSiteName", label = "Site name", value=vData[[4]]),
-          # selectInput("inSiteCountry", label="Choose country", choices = listCountries),
-
-          selectizeInput("inSiteCountry", label="Country name", multiple = TRUE,
-                         choices = unique(geodb$NAME_0),
-                         selected= vData[[5]],
-                         options = list(maxItems = 1, placeholder = 'Select country... ')),
-
-          #textInput("inSiteAdmin1", label = "Site, first-level administrative division name", value=vData[[6]]),
-
-          uiOutput("fbsites_ui_admin1"),
-          uiOutput("fbsites_ui_admin2"),
-          uiOutput("fbsites_ui_admin3"),
-          uiOutput("fbsites_ui_admin4"),
-          uiOutput("fbsites_ui_admin5"),
-
-          #textInput("inSiteAdmin2", label = "Site, second-level administrative division name", value=vData[[7]]),
-          #textInput("inSiteVillage", label = "Village name", value=vData[[8]]),
-          textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[11]]),
+    
+     
+             column(width = 4, 
+                    disabled(textInput("inSiteID", label="Site ID", value = vData[[2]] ))
+                    ),
+             column(width = 4, 
+                    selectizeInput("inSiteType", label="Site type", choices = mchoices, multiple  = TRUE , options = list(maxItems = 1, placeholder ="Select one..."), selected= vData[[3]] )
+              ),
+             column(width = 4, 
+                    textInput("inSiteName", label = "Site name", value=vData[[4]])
+                    
+             ),
+   
+    
+   
+      column(width=6, 
+             # selectInput("inSiteCountry", label="Choose country", choices = listCountries),
+             
+             selectizeInput("inSiteCountry", label="Country name", multiple = TRUE,
+                            choices = unique(geodb$NAME_0),
+                            selected= vData[[5]],
+                            options = list(maxItems = 1, placeholder = 'Select country... ')),
+             
+             #textInput("inSiteAdmin1", label = "Site, first-level administrative division name", value=vData[[6]]),
+             
+             uiOutput("fbsites_ui_admin1"),
+             uiOutput("fbsites_ui_admin2"),
+             uiOutput("fbsites_ui_admin3")
+             ), 
+      column(width = 6, 
+             uiOutput("fbsites_ui_admin4"),
+             uiOutput("fbsites_ui_admin5"),
+             
+             #textInput("inSiteAdmin2", label = "Site, second-level administrative division name", value=vData[[7]]),
+             #textInput("inSiteVillage", label = "Village name", value=vData[[8]]),
+             textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[11]])
+             ),
+      
+   
+    
 
           # radioButtons("select_geosystem", label = h4("Type of coordinates system",style = "font-family: 'Arial', cursive;
           #                                       font-weight: 500; line-height: 1.1; color: #4d3a7d;"),
@@ -160,27 +178,44 @@ uiTrialSiteNew <- function(pData = NULL){
           # 
           #   ),
 
-          #textInput("inSiteElevation", label = "Site elevation (m.a.s.l.)", value=vData[[9]]),
-          shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[12]] ),
-          shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = vData[[13]] ),
+          #textInput("inSiteElevation", label = "Site elevation (m.a.s.l.)", value=vData[[9]]), 
+          column( width = 12,
+            leafletOutput("mymap")
+          ),
+     
+        
+          br(),
+          br(),
+    fluidRow(
+      column(width = 12,
+          column(width = 4, 
+                 shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[12]] )
+          ),
+          column(width = 4, 
+                 shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = vData[[13]] )
+                 ),
           #textInput("inSiteLatitude", label = "Site latitude (in decimal degrees)", value=vData[[10]]),
-          shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = vData[[14]] ),
+          column( width = 4, 
+                  shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = vData[[14]] )
+          )
           #textInput("inSiteLongitude", label = "Site longitude (in decimal degrees)", value=vData[[11]]),
-
+  
           # selectizeInput("inSiteVegetation", label="Vegetation surrounding the experiment site", multiple = TRUE, selected =  veg,
           #                choices = c("Grasslan", "Crops", "Forest", "Woodland", "Shrub land", "Savanna", "Other"),
           #                options = list(maxItems = 5, placeholder = 'select surroundings ')),
           # textAreaInput("inSiteDescNotes", label="Site description notes", value=vData[[12]]),
-
-
+    )),
+      fluidRow(
+        column(width = 12,
           useShinyalert(),
           actionButton(strCreateId, strCreate, class = "btn-primary",style="color: #fff;"),
           actionButton("goToMainSiteScreen", "Cancel")#,
-
+        )
+      )
 
           #shinysky::shinyalert("alert_hagroSites", FALSE, auto.close.after = 8)
-
-    )
+      
+    
   )#end box
   ,
   box(solidHeader = FALSE, width = 12)

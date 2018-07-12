@@ -309,9 +309,6 @@ ui <- dashboardPage(
       #fbmlist::distribution_ui(name = "distributionDB"),
 
       #brapps::fbasingle_ui("SingleChart"),
-
-
-
       #fbanalysis::single_ui(name="singleAnalysisReport"),
 
 

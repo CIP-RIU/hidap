@@ -1,5 +1,25 @@
 source("www/sitesModule/ui_sites.R", local = TRUE)
 
+register_google(key = "AIzaSyAPWYHA8LkSrhnr1XxBFHuJ3aWeqi-N5lQ")
+
+
+
+
+observeEvent(input$mymap_click, {
+  # print(input$mymap_click)
+  lat  <- round(input$mymap_click$lat, 5)
+  lon  <- round(input$mymap_click$lng, 5)
+  
+  updateTextInput(session, "inSiteLatitude", value = lat)
+  updateTextInput(session, "inSiteLongitude", value = lon)
+  
+  leafletProxy("mymap") %>%
+    clearMarkers() %>%
+    addMarkers(lon, lat)
+})
+
+
+
 map1a = leaflet() %>%
   addTiles("https://{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png") %>%
   setView(lng = -4.04296, lat = 16.30796, zoom = 3) #%>%
@@ -240,6 +260,55 @@ observe({
 
   )
 })
+
+
+output$mymap <- renderLeaflet({
+  ZOOM=4
+  # Get latitude and longitude
+  if( is.null(input$inSiteCountry) && is.null(input$input$inSiteAdmin1) && is.null(input$input$inSiteAdmin2) && is.null(input$input$inSiteAdmin3) ){
+    ZOOM=2
+    LAT=0
+    LONG=0
+  }else{
+    minput <- if(is.null(input$inSiteCountry)) "" else input$inSiteCountry
+    if(!is.null(input$inSiteAdmin1)){
+      minput <- paste0(minput," ", input$inSiteAdmin1)
+      ZOOM <- ZOOM + 2
+    }
+    if(!is.null(input$inSiteAdmin2)){
+      minput <- paste0(minput," ", input$inSiteAdmin2)
+      ZOOM <- ZOOM + 2
+    }
+    if(!is.null(input$inSiteAdmin3)){
+      minput <- paste0(minput," ", input$inSiteAdmin3)
+      ZOOM <- ZOOM + 2
+    }
+    
+    
+    # miinput <- if(is.null(input$inSiteAdmin1)) minput else paste0(minput," ", input$inSiteAdmin1)
+    # miinput <- if(is.null(input$inSiteAdmin2)) minput else paste0(minput," ", input$inSiteAdmin2)
+    # miinput <- if(is.null(input$inSiteAdmin3)) minput else paste0(minput," ", input$inSiteAdmin3)
+    
+    target_pos=geocode(minput)
+    LAT=target_pos$lat
+    LONG=target_pos$lon
+    
+  }
+  updateTextInput(session, "inSiteLatitude", value = LAT)
+  updateTextInput(session, "inSiteLongitude", value = LONG)
+  
+  # Plot it!
+  leaflet() %>% 
+    setView(lng=LONG, lat=LAT, zoom=ZOOM ) %>%
+    
+    addProviderTiles(providers$Stamen.TonerLite,
+                     options = providerTileOptions(noWrap = TRUE)
+    ) %>%
+    addMarkers(LONG, LAT)
+  
+    
+})
+
 
 
 observeEvent(input$btCreateSite, {
