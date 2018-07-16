@@ -116,8 +116,8 @@ output$fbsites_ui_admin3 <-renderUI({
     row_to_edit = as.numeric(gsub("siteEdit_","", input$siteClickId))
 
     vData <- dt$trialSites[row_to_edit,]
-    print("print v Data")
-    print(vData)
+    # print("print v Data")
+    # print(vData)
     selAdmin3 <- vData[[8]]
 
   } else{
@@ -262,40 +262,60 @@ observe({
 })
 
 
+# observe({print(sitesValues$clickToEdit)})
 output$mymap <- renderLeaflet({
-  ZOOM=4
-  # Get latitude and longitude
-  if( is.null(input$inSiteCountry) && is.null(input$input$inSiteAdmin1) && is.null(input$input$inSiteAdmin2) && is.null(input$input$inSiteAdmin3) ){
-    ZOOM=2
-    LAT=0
-    LONG=0
-  }else{
-    minput <- if(is.null(input$inSiteCountry)) "" else input$inSiteCountry
-    if(!is.null(input$inSiteAdmin1)){
-      minput <- paste0(minput," ", input$inSiteAdmin1)
-      ZOOM <- ZOOM + 2
+  ZOOM=2
+  LAT=0
+  LONG=0
+ 
+    # Get latitude and longitude
+    if( is.null(input$inSiteCountry) && is.null(input$input$inSiteAdmin1) && is.null(input$input$inSiteAdmin2) && is.null(input$input$inSiteAdmin3) ){
+      ZOOM=2
+      LAT=0
+      LONG=0
     }
-    if(!is.null(input$inSiteAdmin2)){
-      minput <- paste0(minput," ", input$inSiteAdmin2)
-      ZOOM <- ZOOM + 2
+    else {
+        minput <- if(is.null(input$inSiteCountry)) "" else input$inSiteCountry
+        ZOOM=4
+        
+        if(!is.null(input$inSiteAdmin1) && input$inSiteAdmin1 != "NA"){
+         
+          minput <- paste0(minput," ", input$inSiteAdmin1)
+          ZOOM <- ZOOM + 2
+        }
+        if(!is.null(input$inSiteAdmin2) && input$inSiteAdmin2 != "NA"){
+          minput <- paste0(minput," ", input$inSiteAdmin2)
+          ZOOM <- ZOOM + 2
+        }
+        if(!is.null(input$inSiteAdmin3) && input$inSiteAdmin3 != "NA"){
+          minput <- paste0(minput," ", input$inSiteAdmin3)
+          ZOOM <- ZOOM + 2
+        }
+        
+        target_pos=geocode(minput)
+        LAT=target_pos$lat
+        LONG=target_pos$lon
+        
+  
+        # if (isolate(sitesValues$clickToEdit == T)){
+        #   row_to_edit = as.numeric(gsub("siteEdit_","", input$siteClickId))
+        #   vData <- dt$trialSites[row_to_edit,]
+        #   
+        #   
+        #   LAT <- as.numeric(vData[[13]])
+        #   LONG <- as.numeric(vData[[14]])
+        #   
+        #   sitesValues$clickToEdit <- F
+        #   ZOOM = 8
+        #   
+        # } 
+      
     }
-    if(!is.null(input$inSiteAdmin3)){
-      minput <- paste0(minput," ", input$inSiteAdmin3)
-      ZOOM <- ZOOM + 2
-    }
-    
-    
-    # miinput <- if(is.null(input$inSiteAdmin1)) minput else paste0(minput," ", input$inSiteAdmin1)
-    # miinput <- if(is.null(input$inSiteAdmin2)) minput else paste0(minput," ", input$inSiteAdmin2)
-    # miinput <- if(is.null(input$inSiteAdmin3)) minput else paste0(minput," ", input$inSiteAdmin3)
-    
-    target_pos=geocode(minput)
-    LAT=target_pos$lat
-    LONG=target_pos$lon
-    
-  }
-  updateTextInput(session, "inSiteLatitude", value = LAT)
-  updateTextInput(session, "inSiteLongitude", value = LONG)
+    updateTextInput(session, "inSiteLatitude", value = LAT)
+    updateTextInput(session, "inSiteLongitude", value = LONG)
+  
+  
+  
   
   # Plot it!
   leaflet() %>% 
@@ -303,12 +323,12 @@ output$mymap <- renderLeaflet({
     
     addProviderTiles(providers$Stamen.TonerLite,
                      options = providerTileOptions(noWrap = TRUE)
+    
     ) %>%
+    # addTiles() %>%
     addMarkers(LONG, LAT)
   
-    
 })
-
 
 
 observeEvent(input$btCreateSite, {
@@ -645,6 +665,7 @@ observeEvent(input$siteClick,{
     output$trialScreen <- renderUI({
       uiTrialSiteNew(dt$trialSites[row_to_edit,])
     })
+    # sitesValues$clickToEdit <- T
   }
 
   else if (input$siteClickId%like%"siteDelete"){

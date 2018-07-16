@@ -1,5 +1,13 @@
 columnNames <- c("id", "Site ID", "Type", "Name", "Country","First level admin", "Second level admin", "Third level admin","Fourth level admin" , "Village", "Nearest populated place", "Elevation", "Latitude", "Longitude","Creation date")
 
+
+# sitesValues <- NULL
+# sitesValues$counFirstChose <- F
+# sitesValues$adm1FirstChose <- F
+# sitesValues$adm2FirstChose <- F
+# sitesValues$adm3FirstChose <- F
+
+
 dt <- reactiveValues()
 
 uiTrialScreenMain <- function(){
@@ -102,23 +110,19 @@ uiTrialSiteNew <- function(pData = NULL){
     status = "primary", solidHeader = TRUE,
     collapsible = TRUE, width = 12,
     
-     
-             column(width = 4, 
-                    disabled(textInput("inSiteID", label="Site ID", value = vData[[2]] ))
-                    ),
-             column(width = 4, 
-                    selectizeInput("inSiteType", label="Site type", choices = mchoices, multiple  = TRUE , options = list(maxItems = 1, placeholder ="Select one..."), selected= vData[[3]] )
-              ),
-             column(width = 4, 
-                    textInput("inSiteName", label = "Site name", value=vData[[4]])
-                    
-             ),
-   
+    box(
+      title = "Site name", solidHeader = TRUE, status = "warning", width=12,
+      column(width = 4, 
+             disabled(textInput("inSiteID", label="Site ID", value = vData[[2]] )),
+             selectizeInput("inSiteType", label="Site type", choices = mchoices, multiple  = TRUE , options = list(maxItems = 1, placeholder ="Select one..."), selected= vData[[3]] ),
+             textInput("inSiteName", label = "Site name", value=vData[[4]])
+      )
+    ),
     
-   
-      column(width=6, 
-             # selectInput("inSiteCountry", label="Choose country", choices = listCountries),
-             
+     
+    box(
+      title = "Site location", solidHeader = TRUE, status = "warning", width=12,
+      column(4, 
              selectizeInput("inSiteCountry", label="Country name", multiple = TRUE,
                             choices = unique(geodb$NAME_0),
                             selected= vData[[5]],
@@ -128,92 +132,32 @@ uiTrialSiteNew <- function(pData = NULL){
              
              uiOutput("fbsites_ui_admin1"),
              uiOutput("fbsites_ui_admin2"),
-             uiOutput("fbsites_ui_admin3")
-             ), 
-      column(width = 6, 
+             uiOutput("fbsites_ui_admin3"),
              uiOutput("fbsites_ui_admin4"),
              uiOutput("fbsites_ui_admin5"),
+             textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[11]]), 
+             shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[12]] )
              
-             #textInput("inSiteAdmin2", label = "Site, second-level administrative division name", value=vData[[7]]),
-             #textInput("inSiteVillage", label = "Village name", value=vData[[8]]),
-             textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[11]])
-             ),
-      
-   
-    
-
-          # radioButtons("select_geosystem", label = h4("Type of coordinates system",style = "font-family: 'Arial', cursive;
-          #                                       font-weight: 500; line-height: 1.1; color: #4d3a7d;"),
-          #              choices = c("Decimal", "Sexagesimal"),
-          #              selected = "Decimal"),
-          # 
-          # conditionalPanel(
-          #   condition = "input.select_geosystem == 'Decimal'",
-          # 
-          #                  shiny::numericInput(inputId = "fbsites_latitude",  value = 0.0, label = "Latitude"),
-          #                  shiny::numericInput(inputId = "fbsites_longitude", value = 0.0, label = "Longitude")
-          #   ),
-          # 
-          # 
-          # conditionalPanel(
-          #   condition = "input.select_geosystem == 'Sexagesimal'",
-          # 
-          #       column(4,  div(style="display:inline-block",
-          #                  h4("Latitude"),
-          #                  numericInput(inputId = "fbsites_grade_lat", label="Grades (°)", value = 10),
-          #                  numericInput(inputId = "fbsites_minute_lat", label="Minutes (')", value = 10),
-          #                  numericInput(inputId = "fbsites_second_lat", label="Seconds ('')", value = 10),
-          #                  selectInput(inputId  =  "fbsites_orientation_lat", label="Orientation",
-          #                              choices  = c("N","S"), selected = "N" )#,
-          #       ),
-          # 
-          #       column(4,  div(style="display:inline-block",
-          #                  h4("Longitude"),
-          #                  numericInput(inputId = "fbsites_grade_long", label="Grades (°)", value = 10),
-          #                  numericInput(inputId = "fbsites_minute_long", label="Minutes (')", value = 10),
-          #                  numericInput(inputId = "fbsites_second_long", label="Seconds ('')", value = 10),
-          #                  selectInput(inputId =  "fbsites_orientation_long", label="Orientation",
-          #                              choices = c("E","W"), selected = "E" )#,
-          #       )#,
-          # 
-          #   ),
-
-          #textInput("inSiteElevation", label = "Site elevation (m.a.s.l.)", value=vData[[9]]), 
-          column( width = 12,
-            leafletOutput("mymap")
-          ),
-     
-        
-          br(),
-          br(),
-    fluidRow(
-      column(width = 12,
-          column(width = 4, 
-                 shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[12]] )
-          ),
-          column(width = 4, 
-                 shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = vData[[13]] )
-                 ),
-          #textInput("inSiteLatitude", label = "Site latitude (in decimal degrees)", value=vData[[10]]),
-          column( width = 4, 
-                  shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = vData[[14]] )
-          )
-          #textInput("inSiteLongitude", label = "Site longitude (in decimal degrees)", value=vData[[11]]),
-  
-          # selectizeInput("inSiteVegetation", label="Vegetation surrounding the experiment site", multiple = TRUE, selected =  veg,
-          #                choices = c("Grasslan", "Crops", "Forest", "Woodland", "Shrub land", "Savanna", "Other"),
-          #                options = list(maxItems = 5, placeholder = 'select surroundings ')),
-          # textAreaInput("inSiteDescNotes", label="Site description notes", value=vData[[12]]),
-    )),
-      fluidRow(
-        column(width = 12,
-          useShinyalert(),
-          actionButton(strCreateId, strCreate, class = "btn-primary",style="color: #fff;"),
-          actionButton("goToMainSiteScreen", "Cancel")#,
-        )
+             ), 
+      column( width = 8,
+              br(),
+              leafletOutput("mymap"), 
+              fluidRow(
+                column(width = 6, 
+                       shiny::numericInput(inputId = "inSiteLatitude" , label = "Site latitude (in decimal degrees)", value = vData[[13]] )
+                ),
+                column( width = 6,
+                        shiny::numericInput(inputId = "inSiteLongitude" , label = "Site longitude (in decimal degrees)", value = vData[[14]] )
+                        )
+              )
       )
-
-          #shinysky::shinyalert("alert_hagroSites", FALSE, auto.close.after = 8)
+    ),
+      
+    column(width = 12,
+      useShinyalert(),
+      actionButton(strCreateId, strCreate, class = "btn-primary",style="color: #fff;"),
+      actionButton("goToMainSiteScreen", "Cancel")#,
+    )
       
     
   )#end box
