@@ -70,6 +70,7 @@ loginModal <- function(message = ""){
     div(
       textInput("userName", "Username:"),
       passwordInput("passwd", "Password:"),
+      checkboxInput("rememberMe","Remember me"),
       HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
     ),
 
@@ -119,34 +120,7 @@ observeEvent(input$checkLogin, {
   val  <- validateEmail(trimws(input$userName))
   inputPass <- trimws(input$passwd)
   if (USER$Logged == FALSE && as.logical(val[1]) && nchar(inputPass) > 0) {
-    Username <- isolate(trimws(input$userName))
-    Password <- digest(isolate(inputPass), "sha256", serialize = FALSE)
-
-    mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
-    userc = dbSendQuery(mydb, "select id, username, password, fname, lname, country, organization from users where available = 1")
-    data1 = fetch(userc, n=-1)
-    dbDisconnect(mydb)
-    PASSWORD <- data.frame(Brukernavn = data1[,2], Passord = data1[,3])
-
-    Id.username <- which(PASSWORD$Brukernavn == Username)
-
-    if (length(Id.username) == 1) {
-      if (PASSWORD[Id.username, 2] == Password) {
-        USER$Logged <- TRUE
-       
-        # USER$list <- paste(data1[,4], data1[,5], paste0("<", data1[,2], ">"))
-        USER$id <- data1[Id.username, "id"]
-        USER$username <- data1[Id.username, "username"]
-        USER$fname <- data1[Id.username, "fname"]
-        USER$lname <- data1[Id.username, "lname"]
-        USER$org <- data1[Id.username, "organization"]
-        USER$country <- data1[Id.username, "country"]
-
-        # fbdesign::setUserSession(T, USER$username, USER$id)
-        removeModal()
-        output$userLoggedText <- renderText(paste("Hello,", USER$fname, sep=" "))
-      }
-    }
+    checkCredentials(isolate(trimws(input$userName)),digest(isolate(inputPass), "sha256", serialize = FALSE))
   }
 
   if(USER$Logged == FALSE){
@@ -156,16 +130,64 @@ observeEvent(input$checkLogin, {
 })
 
 
+checkCredentials <- function(Username, Password){
+  # Username <- isolate(trimws(input$userName))
+  # Password <- digest(isolate(inputPass), "sha256", serialize = FALSE)
+  
+  mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)
+  userc = dbSendQuery(mydb, "select id, username, password, fname, lname, country, organization from users where available = 1")
+  data1 = fetch(userc, n=-1)
+  dbDisconnect(mydb)
+  PASSWORD <- data.frame(Brukernavn = data1[,2], Passord = data1[,3])
+  
+  Id.username <- which(PASSWORD$Brukernavn == Username)
+  
+  if (length(Id.username) == 1) {
+    if (PASSWORD[Id.username, 2] == Password) {
+      USER$Logged <- TRUE
+      # USER$list <- paste(data1[,4], data1[,5], paste0("<", data1[,2], ">"))
+      USER$id <- data1[Id.username, "id"]
+      USER$username <- data1[Id.username, "username"]
+      USER$fname <- data1[Id.username, "fname"]
+      USER$lname <- data1[Id.username, "lname"]
+      USER$org <- data1[Id.username, "organization"]
+      USER$country <- data1[Id.username, "country"]
+
+      
+      js$setcookie(Username, Password)
+      req(input$rememberMe)
+      key <- NULL
+      if(isolate(input$rememberMe)){
+        key <- pubKey
+        updateStore(session, "userName", isolate(input$userName), encrypt=key)
+        updateStore(session, "passwd", isolate(input$passwd), encrypt=key)
+      }
+    }
+  }
+}
+
+# observe({
+#   js$getcookie()
+#   checkCredentials(input$jscookie_user, input$jscookie_pass)
+# })
+
+
+
 ###########################################################################################################
 # to perform when a user logs in
 ###########################################################################################################
 observe({
   if(USER$Logged == TRUE) {
-    # session$user <- USER$id
+    
+    
+    removeModal()
+    
     session$userData$logged <- TRUE
     session$userData$userId <- USER$id
     
     # menu to be shown with hidap network options when the users logs in
+    
+    output$userLoggedText <- renderText(paste0("Hello,", USER$fname)) 
     output$menuUser <- renderMenu({
       sidebarMenu(id ="networkMenu",
                   fluidRow(
@@ -257,15 +279,10 @@ observe({
                     br()
                   ),
                   fluidRow(
-                    # column(width = 1),
-                    # column(width = 2,
-                    #        div(icon("user-circle", "fa-3x"), style="text-align: left;")
-                    # ),column(width = 1),
                     column(width = 12,
                            div("Hello, Guest", style="text-align: center;"),
                            div(icon("circle-o"), "Not connected", style="text-align: center;")
                     )),
-                  # br(),
 
                   div(style="padding-left: 90px",actionButton("btLogIn", "Log in", icon=icon("sign-in"), style='padding:4px;font-size:70%'))
       )
@@ -278,23 +295,15 @@ observe({
                      menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file")),
 
                      menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
-                     menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
+                     menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))
             ),
-
             menuItem("Single Trial Analysis", icon = icon("bar-chart"),
-                     #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-                     menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("file-text-o"))#,
-                     #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
-                     
-                     #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+                     menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("file-text-o"))
             ),
-            
             menuItem("Documentation",  icon = icon("copy")
             ),
-
             menuItem("Help",  icon = icon("question-circle")
             ),
-
             menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)
       )
     })
@@ -477,10 +486,8 @@ observeEvent(input$btLogIn, {
 
 
 observeEvent(input$btLogOut, {
-  # updateTabItems(session, "tabs", "dashboard")
-  # fbdesign::setUserSession(logged = F, NULL, NULL)
+  js$rmcookie()
   USER$Logged <- FALSE
-
 })
 
 ###########################################################################################################

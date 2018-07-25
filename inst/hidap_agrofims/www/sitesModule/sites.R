@@ -349,24 +349,24 @@ observeEvent(input$btCreateSite, {
     }
 
     flag_admin3 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1, admin2 = vAdmin2)
-    print("flag admin3")
-    print(flag_admin3)
-    print("end flag3")
+    
+    # print(flag_admin3)
+    
     if(is.na(flag_admin3)){
       vAdmin3   <- input$inSiteAdmin3_text       #var5
     } else {
       vAdmin3   <- input$inSiteAdmin3
     }
 
-    print(vCountry)
-    print(vAdmin1)
-    print(vAdmin2)
-    print(vAdmin3)
+    # print(vCountry)
+    # print(vAdmin1)
+    # print(vAdmin2)
+    # print(vAdmin3)
 
     flag_admin4 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1, admin2 = vAdmin2, admin3 = vAdmin3)
-    print("flag admin4")
-    print(flag_admin4)
-    print("end flag4")
+    
+    # print(flag_admin4)
+    
 
 
     if(is.na(flag_admin4)){
@@ -460,7 +460,7 @@ observeEvent(input$btUpdateSite, {
       vAdmin2   <- input$inSiteAdmin2_text
     }
     
-    print(paste0(vAdmin2, " admin 2"))
+    # print(paste0(vAdmin2, " admin 2"))
 
     flag_admin3 <- get_admin_agrofims(geodb, country = vCountry, admin1 = vAdmin1, admin2 = vAdmin2)
 
@@ -562,7 +562,7 @@ observeEvent(input$btUpdateSite, {
 
 
 observeEvent(input$btShowMap, {
-  print("clicked")  
+  # print("clicked")  
   output$mymap1a <- renderLeaflet(
     leaflet() %>%
       addTiles() %>%  # Add default OpenStreetMap map tiles

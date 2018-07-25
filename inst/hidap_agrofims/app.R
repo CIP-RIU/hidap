@@ -94,6 +94,12 @@ library(sp)
 
 ## devtools::install_github("dkahle/ggmap") ## use this version of ggmap
 
+### libraries for the "remember me" 
+library(shinyStore)  ## install_github("trestletech/shinyStore")
+library(PKI)
+privKey <- PKI.load.key(file="test.key")
+
+pubKey <- PKI.load.key(file="test.key.pub")
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
@@ -115,17 +121,46 @@ source("www/loginModule/dbData.R", local = TRUE)
 #
 # }
 # '
+sessionid <- "OQGYIrpOvV3KnOpBSPgOhqGxz2dE5A9IpKhP6Dy2kd7xIQhLjwYzskn9mIhRAVHo"
 
-jscode <- "
+jscode <- '
 shinyjs.collapse = function(boxid) {
-$('#' + boxid).closest('.box').find('[data-widget=collapse]').click();
+$("#" + boxid).closest(".box").find("[data-widget=collapse]").click();
 }
-"
+
+shinyjs.getcookie = function(params) {
+  var user = Cookies.get("user_af");
+  var pass = Cookies.get("pass_af");
+  if (typeof pass !== "undefined") {
+    
+    Shiny.onInputChange("jscookie_user", user);
+    Shiny.onInputChange("jscookie_pass", pass);
+    //Shiny.onInputChange("jscookie", user + pass);
+  } else {
+    var cookie = "";
+    //Shiny.onInputChange("jscookie", cookie);
+    Shiny.onInputChange("jscookie_user", cookie);
+    Shiny.onInputChange("jscookie_pass", cookie);
+  }
+}
+shinyjs.setcookie = function(params) {
+  Cookies.set("user_af", escape(params[0]), { expires: 0.5 });
+  Cookies.set("pass_af", escape(params[1]), { expires: 0.5 }); 
+   Shiny.onInputChange("jscookie_user", escape(params[0]));
+}
+shinyjs.rmcookie = function(params) {
+  Cookies.remove("user_af");
+  Cookies.remove("pass_af");
+  //Shiny.onInputChange("jscookie", "");
+}
+
+'
 
 ui <- dashboardPage(
 
 
-
+  
+  
   # skin = "green",
   dashboardHeader(title = "", titleWidth = "250px"
                   #tags$script(HTML("$('body').addClass('sidebar-mini');"))
@@ -238,14 +273,21 @@ ui <- dashboardPage(
 
   dashboardBody(
 
-
+    tags$head(
+      tags$script(src = "js.cookies.js")
+    ),
+    
     useShinyjs(),
     extendShinyjs(text = jscode),
+    initStore("store", "shinyStore-haf", privKey), # Namespace must be unique to this application!
     #
     # tags$head(
     #   tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
     # ),
     #for the top right text
+    
+    
+    
     tags$head(tags$style(HTML(
       '.headerTopRight {
       line-height: 50px;
@@ -550,6 +592,15 @@ ui <- dashboardPage(
 
 sv <- function(input, output,  session) ({
   
+  observe({
+    js$getcookie()
+    if (!is.null(input$jscookie_user) &&
+        input$jscookie_user != "") {
+      checkCredentials(input$jscookie_user, input$jscookie_pass)
+    }
+    
+  })
+  
   session$userData$logged <- F
   session$userData$userId <- NULL
 
@@ -557,28 +608,6 @@ sv <- function(input, output,  session) ({
 
   useShinyjs()
   extendShinyjs(text = jscode)
-
-
-  # shiny::observe({
-  #   #print(USER$Logged)
-  #     login <- USER$Logged
-  # })
-
-  #USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
-
-
- # login_reactive <- reactive({
- #   print(USER$Logged)
- #   if(USER$Logged){
- #     USER$Logged<- TRUE
- #     login <- TRUE
- #   }else {
- #     USER$Logged <- FALSE
- #     login <- FALSE
- #   }
- #   login
- #   #login <- USER$Logged
- # })
 
 
 
