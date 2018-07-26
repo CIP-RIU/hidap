@@ -1,6 +1,6 @@
 #library(d3heatmap)
 library(devtools)
-install_github("jrowen/rhandsontable", ref = "v0.3.1")
+# install_github("jrowen/rhandsontable", ref = "v0.3.1")
 library(shinysky)
 library(data.table)
 library(httr)
@@ -85,7 +85,7 @@ library(shinyalert)
 library(stringi)
 
 #active URL
-library(shinyURL)
+# library(shinyURL)
 
 
 print("WD de APP")
@@ -99,7 +99,7 @@ getwd()
 # remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
 # into HIDAP working dir by installer
 #Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
-
+source("www/login_module/dbData.R", local = TRUE)
 
 ui <- dashboardPage(
   skin = "yellow",
@@ -113,9 +113,14 @@ ui <- dashboardPage(
                    #div(style="margin-right: auto;",img(src = "Logo1.png", width = "250")),
                    br(),
                    div(img(src="hidapicon.png", width = "150px"), style="text-align: center;"),
+                   br(),
+                   div(sidebarMenuOutput("menuUser")),
 
-                   shinyURL.ui(display = FALSE),
+                   # shinyURL.ui(display = FALSE),s
                    #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
+                   
+                   # sidebarMenuOutput("menu")
+                   ### menu relocated to www/login_module/login.R
                    sidebarMenu(
                      id = "tabs",
                      # menuItem("Phenotype tool", icon = icon("th-list"),
@@ -137,10 +142,10 @@ ui <- dashboardPage(
                               # ),
 
                               menuItem("Data Quality",
-                                       menuSubItem("Check fieldbook", tabName = "checkFieldbook_sbase",icon = icon("file-text-o"))     
-                                       
+                                       menuSubItem("Check fieldbook", tabName = "checkFieldbook_sbase",icon = icon("file-text-o"))
+
                               ),
-                              
+
                               menuItem("Data Exploration",
                                        #menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
                                        menuSubItem("Graphics", tabName = "edaGraph_sbase",icon = icon("file-text-o"))#,
@@ -187,6 +192,8 @@ ui <- dashboardPage(
                      #          menuSubItem("Check updates", tabName = "updateHidap",icon = icon("refresh"))#,
                      # ),
                      #
+                     
+                     menuItem("Study Registry", tabName = "fielbookRegistry_tab", icon = icon("file-text-o")),#,
 
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
 
@@ -284,6 +291,8 @@ ui <- dashboardPage(
               br(),
               br()
       ),
+      
+      tabItem(tabName = "fielbookRegistry_tab", uiOutput("fbregistry_login_message"), box(status="primary",title = "Study Registry",  width = 12, solidHeader = T, collapsible = T, uiOutput("tab_fb_registry_above"), column(12,dataTableOutput("fb_registry_table")), uiOutput("tab_fb_registry_below"))),
       #Fin codigo Ivan Perez
       ###
 
@@ -372,8 +381,27 @@ ui <- dashboardPage(
 
 sv <- function(input, output, session) ({
 
-  shinyURL.server()
+  # shinyURL.server()
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
+  
+  
+  ################ user session ####################################################################
+  
+  source("www/login_module/login.R", local = TRUE)
+  source("www/login_module/ui_login.R", local = TRUE)
+  
+  session$userData$logged <- F
+  session$userData$userId <- NULL
+  session$userData$username <- NULL
+  session$userData$token <- NULL
+  session$userData$conn <- NULL
+  
+  USER <- reactiveValues(logged = F, name = NULL, id = NULL, token = NULL, username = NULL)
+  
+  ##############################################################################################################################
+  
+  source("www/fbregistry_module/fbregistry.R", local = TRUE)
+  
 
   withProgress(message = 'Loading HiDAP', value = 0, {
 

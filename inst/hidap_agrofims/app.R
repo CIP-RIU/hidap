@@ -151,7 +151,7 @@ shinyjs.setcookie = function(params) {
 shinyjs.rmcookie = function(params) {
   Cookies.remove("user_af");
   Cookies.remove("pass_af");
-  //Shiny.onInputChange("jscookie", "");
+  Shiny.onInputChange("jscookie_user", "");
 }
 
 '
@@ -598,7 +598,6 @@ sv <- function(input, output,  session) ({
         input$jscookie_user != "") {
       checkCredentials(input$jscookie_user, input$jscookie_pass)
     }
-    
   })
   
   session$userData$logged <- F

@@ -68,9 +68,9 @@ loginModal <- function(message = ""){
   modalDialog(
     title = HTML("<center><font color='#f7941d'><h2> Log in to HiDAP AGROFIMS </h2></font></center>"),
     div(
-      textInput("userName", "Username:"),
-      passwordInput("passwd", "Password:"),
-      checkboxInput("rememberMe","Remember me"),
+      textInput("userName", "Username:", value = getLoginInput("username")),
+      passwordInput("passwd", "Password:", value = getLoginInput("password")),
+      checkboxInput("rememberMe","Remember me", T),
       HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
     ),
 
@@ -94,8 +94,9 @@ loginModalMenu <- function(message = ""){
   modalDialog(
     title = HTML("<center><font color='#f7941d'><h2> Log in to HiDAP AGROFIMS </h2></font></center>"),
     div(
-      textInput("userName", "Username:"),
-      passwordInput("passwd", "Password:"),
+      textInput("userName", "Username:", getLoginInput("username")),
+      passwordInput("passwd", "Password:", getLoginInput("password")),
+      checkboxInput("rememberMe","Remember me", T),
       HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
     ),
 
@@ -120,7 +121,20 @@ observeEvent(input$checkLogin, {
   val  <- validateEmail(trimws(input$userName))
   inputPass <- trimws(input$passwd)
   if (USER$Logged == FALSE && as.logical(val[1]) && nchar(inputPass) > 0) {
+  
     checkCredentials(isolate(trimws(input$userName)),digest(isolate(inputPass), "sha256", serialize = FALSE))
+    
+    key <- NULL
+    if(isolate(input$rememberMe)){
+      key <- pubKey
+      updateStore(session, "userName", isolate(input$userName), encrypt=key)
+      updateStore(session, "passwd", isolate(input$passwd), encrypt=key)
+    }
+    else{
+      key <- pubKey
+      updateStore(session, "userName", "", encrypt=key)
+      updateStore(session, "passwd", "", encrypt=key)
+    }
   }
 
   if(USER$Logged == FALSE){
@@ -145,7 +159,7 @@ checkCredentials <- function(Username, Password){
   if (length(Id.username) == 1) {
     if (PASSWORD[Id.username, 2] == Password) {
       USER$Logged <- TRUE
-      # USER$list <- paste(data1[,4], data1[,5], paste0("<", data1[,2], ">"))
+      
       USER$id <- data1[Id.username, "id"]
       USER$username <- data1[Id.username, "username"]
       USER$fname <- data1[Id.username, "fname"]
@@ -155,13 +169,8 @@ checkCredentials <- function(Username, Password){
 
       
       js$setcookie(Username, Password)
-      req(input$rememberMe)
-      key <- NULL
-      if(isolate(input$rememberMe)){
-        key <- pubKey
-        updateStore(session, "userName", isolate(input$userName), encrypt=key)
-        updateStore(session, "passwd", isolate(input$passwd), encrypt=key)
-      }
+      
+      
     }
   }
 }
@@ -187,7 +196,7 @@ observe({
     
     # menu to be shown with hidap network options when the users logs in
     
-    output$userLoggedText <- renderText(paste0("Hello,", USER$fname)) 
+    output$userLoggedText <- renderText(paste0("Hello, ", USER$fname)) 
     output$menuUser <- renderMenu({
       sidebarMenu(id ="networkMenu",
                   fluidRow(
@@ -400,7 +409,7 @@ observeEvent(input$ResetPass,{
 
     var <- httr::POST("https://research.cip.cgiar.org/gtdms/hidap/script/agrofims/resetPasswordHidap.php", body=params)
     code <- content(var, "text")
-    print(code)
+    
     if (code == "200"){
       # showModal(modalDialog(title = "HiDAP-AGROFIMS", HTML("Succesfully reset")))
       output$pass <- renderText("<h4>Password reset successful. An email has been sent with a new password </h4>")
@@ -458,8 +467,9 @@ observeEvent(input$btCreateUser, {
       if (USER$Logged == FALSE) {
         wellPanel(
           h3("Start a new session!"),
-          textInput("userName", "Username:"),
-          passwordInput("passwd", "Password:"),
+          textInput("userName", "Username:",getLoginInput("username")),
+          passwordInput("passwd", "Password:", getLoginInput("password")),
+          checkboxInput("rememberMe","Remember me", T),
           br(),
           actionButton("Login", "Log in"),
           br(),
@@ -776,3 +786,37 @@ validateInput <- function(input){
   res <- c(TRUE, "")
   return(res)
 }
+
+getLoginInput <- function(type){
+  # Thu Jul 26 13:32:14 2018 ------------------------------
+  ans <- "--"
+  txt <- NULL
+  if(type == "username")  txt <- input$store$userName
+  else if(type == "password")  txt <- input$store$passwd
+    if (ssErr(txt) > 0){
+      print("Encountered an error decrypting the text!")
+      return("none")
+    }
+  else{
+    ans <- txt
+  }
+  return(ans)
+}
+
+# output$userName <- renderText({
+#   txt <- input$store$userName
+#   if (ssErr(txt) > 0){
+#     print("Encountered an error decrypting the text!")
+#   }
+#   return(txt)
+# })
+# 
+# 
+# output$passwd <- renderText({
+# 
+#   txt <- input$store$passwd
+#   if (ssErr(txt) > 0){
+#     print("Encountered an error decrypting the text!")
+#   }
+#   return(txt)
+# })

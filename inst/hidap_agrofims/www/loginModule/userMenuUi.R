@@ -1,4 +1,3 @@
-
 output$uiUserProfile <- renderUI({
   if (USER$Logged == TRUE) {
     fluidRow(
@@ -113,20 +112,3 @@ observeEvent(input$btLogIn3, {
   showModal(loginModalMenu())
 })
 
-output$userName <- renderText({
-  txt <- input$store$userName
-  if (ssErr(txt) > 0){
-    print("Encountered an error decrypting the text!")
-  }
-  return(txt)
-})
-
-
-output$passwd <- renderText({
-
-  txt <- input$store$passwd
-  if (ssErr(txt) > 0){
-    print("Encountered an error decrypting the text!")
-  }
-  return(txt)
-})
