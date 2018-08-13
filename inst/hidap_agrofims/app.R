@@ -1,89 +1,62 @@
+#### Librerias
+### Librerias de CRAN que cargan por defecto:
 library(d3heatmap)
 library(shinysky)
 library(data.table)
-library(shinyTree)
-
+library(shinydashboard)
 library(doBy)
 library(tidyr)
 library(DT)
-library(brapi)
-library(brapps)
-library(agricolae)
+library(date)
 library(dplyr)
 library(openxlsx)
-#library(fbmet)
-# library(fbhelp)
-library(fbdesign)
-library(rhandsontable)
-library(shinydashboard)
-library(date)
-
-library(purrr)
-# library(shinyURL)
 library(qtlcharts)
 library(leaflet)
 library(withr)
 library(dplyr)
-library(st4gi)
+library(purrr)
 library(tibble)
 library(knitr)
 library(readxl)
 library(countrycode)
-library(fbsites)
-# library(fbmlist)
-#library(fbmet)
-
-# library(fbcheck)
-#library(fbmlist)
-library(shinyjs)
 library(DBI)
 library(RMySQL)
 library(spsurvey)
 library(foreign)
 library(tools)
 library(stringr)
+library(rprojroot)
+library(factoextra)
+library(ggrepel)
+library(tibble)
+library(stringi)
+library(digest)
+library(shiny)
+library(datasets)
+
+### Librerias de CIP-RIU (GITHUB) que cargan por defecto:
+library(shinyTree)
+library(agricolae)
+library(brapi)
+library(brapps)
+library(fbdesign)
+library(rhandsontable)
+library(shinyjs)
+library(st4gi)
+library(fbsites)
 library(shinyBS)
-# library(fbopenbooks)
-# library(fbanalysis)
-# library(traittools)
 library(sbformula)
 library(pepa)
 library(shinyFiles)
 library(rlist)
-library(rprojroot)
-library(factoextra)
-library(ggrepel)
-library(countrycode)
-
-# library(fbdocs)
-# library(geneticdsg)
-
-#package fbupdate
-#library(remotes)
-#library(fbupdate)
-library(tibble)
-#library(shinyjs)
-
-# library(shinyalert)
-
-# packages for HiDAP network
-library(stringi)
-library(digest)
-# library(DT)
-library(shiny)
-# library(shinyjs)
-# library(shinydashboard)
-library(datasets)
-# library(RMySQL)
-library(httr) #library for http requests, used to make POST request to the server
-library(bsplus) #hidapnetwork
-library(htmltools) #hidapnetwork
-
+library(httr) # library for http requests, used to make POST request to the server
+library(bsplus) # hidapNetwork
+library(htmltools) # hidapnetwork
 library(lubridate)
-library(shinyalert) #new
+library(shinyalert) # new
 
 ### for maps rendering
-library(ggmap)
+library(ggmap) # devtools::install_github("dkahle/ggmap") ## use this version of ggmap
 library(leaflet)
 library(magrittr)
 library(maps)
@@ -92,15 +65,43 @@ library(raster)
 library(rgeos)
 library(sp)
 
-## devtools::install_github("dkahle/ggmap") ## use this version of ggmap
-
 ### libraries for the "remember me" 
-library(shinyStore)  ## install_github("trestletech/shinyStore")
-library(PKI)
+library(shinyStore) # install_github("trestletech/shinyStore")
+library(PKI) # CRAN
+
+# library(shinyURL)
+# library(fbmet)
+# library(fbhelp)
+# library(fbmlist)
+# library(fbmet)
+# library(fbcheck)
+# library(fbmlist)
+# library(fbopenbooks)
+# library(fbanalysis)
+# library(traittools)
+# library(fbdocs)
+# library(geneticdsg)
+# package fbupdate
+# library(remotes)
+# library(fbupdate)
+# library(shinyjs)
+# library(shinyalert)
+# packages for HiDAP network
+# library(DT)
+# library(shinyjs)
+# library(shinydashboard)
+# library(RMySQL)
+
+####
+
+
+
+#### Llaves para encriptar las cookies: utilizado en el Remember me
 privKey <- PKI.load.key(file="test.key")
-
 pubKey <- PKI.load.key(file="test.key.pub")
+####
 
+#### Codigo de Omar
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 #dd = system.file("xdata/Default", package = "fbglobal")
@@ -108,26 +109,21 @@ pubKey <- PKI.load.key(file="test.key.pub")
 # remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
 # into HiDAP working dir by installer
 #Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
+####
 
-
-
+#### Carga las credenciales de la bd
 source("www/loginModule/dbData.R", local = TRUE)
+####
 
-#$(".headerTopRight").empty()
-# jscode <- '
-#     shinyjs.foo = function(params) {
-#
-#     console.log(params);
-#
-# }
-# '
-sessionid <- "OQGYIrpOvV3KnOpBSPgOhqGxz2dE5A9IpKhP6Dy2kd7xIQhLjwYzskn9mIhRAVHo"
-
+#### Codigo java
 jscode <- '
+// Codigo para expandir Boxes
 shinyjs.collapse = function(boxid) {
 $("#" + boxid).closest(".box").find("[data-widget=collapse]").click();
 }
+//
 
+// Codigo para manejar las cookies, para continuar logeado cuando se refresca la pagina
 shinyjs.getcookie = function(params) {
   var user = Cookies.get("user_af");
   var pass = Cookies.get("pass_af");
@@ -153,15 +149,15 @@ shinyjs.rmcookie = function(params) {
   Cookies.remove("pass_af");
   Shiny.onInputChange("jscookie_user", "");
 }
+//
 
 '
+####
 
 ui <- dashboardPage(
-
-
-  
-  
   # skin = "green",
+  
+  
   dashboardHeader(title = "", titleWidth = "250px"
                   #tags$script(HTML("$('body').addClass('sidebar-mini');"))
   ),#end Header
@@ -170,7 +166,10 @@ ui <- dashboardPage(
                    #div(style="margin-right: auto;",img(src = "Logo1.png", width = "250")),
                    br(),
                    # div(img(src="missing-image.png", width = "150px"), style="text-align: center;"),
+                   
+                   #### Logo mas info del usuario
                    div(sidebarMenuOutput("menuUser")),
+                   ####
 
                    sidebarMenu(
 
@@ -179,7 +178,9 @@ ui <- dashboardPage(
 
 
                      br(),
+                     #### Menu principal
                      sidebarMenuOutput("menu")#, #menu is render in login.R when users logs in
+                     ####
                      # menuItem("Site information", tabName = "trialSite", icon = icon("map-marker")),
                      # menuItem("Fieldbook", icon = icon("book"),
                      #          #menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
@@ -274,12 +275,16 @@ ui <- dashboardPage(
   dashboardBody(
 
     tags$head(
+      #### Funciones javascript para el manejo de cookies en general
       tags$script(src = "js.cookies.js")
+      ####
     ),
     
     useShinyjs(),
     extendShinyjs(text = jscode),
+    #### Inicializa la libreria ShinyStore: utilizado en el Remenber me
     initStore("store", "shinyStore-haf", privKey), # Namespace must be unique to this application!
+    ####
     #
     # tags$head(
     #   tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
@@ -288,7 +293,10 @@ ui <- dashboardPage(
     
     
     
+    
     tags$head(tags$style(HTML(
+      
+      
       '.headerTopRight {
       line-height: 50px;
       text-align: right;
@@ -314,6 +322,8 @@ ui <- dashboardPage(
       }
     '))),
 
+    
+    #### Carga el logo de Big Data en la esquina superior derecha
     tags$script(HTML('
                                             $(document).ready(function() {
        $("header").find("nav").append(\'<div class="headerTopRight"> <img src="http://bigdata.cgiar.org/wp-content/uploads/2017/04/CGIAR_PforBD-logo.png" width="105px"> </div>\');
@@ -345,11 +355,6 @@ ui <- dashboardPage(
                               .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
                               background-color: #3C8DBC !important;
                               }
-
-
-
-
-
 
                               .box.box-solid.box-primary>.box-header {
                               color:#555;
@@ -396,6 +401,22 @@ ui <- dashboardPage(
                               border-right-color:#6c757d;
                               border-top-color:#6c757d;
                               }
+
+.checkbox, .radio {
+                        margin-top: 0px;
+                    margin-bottom: -20px;
+                    }
+
+box(
+        status = "primary", solidHeader = TRUE, collapsible = TRUE,
+        title = fluidRow(
+          column(1, checkboxInput(inputId = "Other", "", value = FALSE)),
+          column(11, "Inventory information")
+        ),
+        "body",
+        plotOutput("plot3", height = 250)
+      ),
+
 
 
 
@@ -592,6 +613,7 @@ ui <- dashboardPage(
 
 sv <- function(input, output,  session) ({
   
+  #### Funcion que hace que contunue logeado
   observe({
     js$getcookie()
     if (!is.null(input$jscookie_user) &&
@@ -599,26 +621,33 @@ sv <- function(input, output,  session) ({
       checkCredentials(input$jscookie_user, input$jscookie_pass)
     }
   })
+  ####
   
+  #### Login
   session$userData$logged <- F
   session$userData$userId <- NULL
 
   USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
-
+  ####
+  
   useShinyjs()
   extendShinyjs(text = jscode)
 
 
 
   # USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
+  #### Modulo pendiente
   dt_myMaterialList <- reactiveValues()
+  ####
 
+  #### Files necesrios para el login
   source("www/loginModule/userMenuUi.R",local = TRUE)
   source("www/driveModule/drive.R", local = TRUE)
   source("www/sitesModule/sites.R", local = TRUE)
   source("www/loginModule/login.R", local = TRUE)
-
-
+  ####
+  
+  #### Codigo de Omar
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
   withProgress(message = 'Loading HiDAP', value = 0, {
@@ -686,9 +715,6 @@ sv <- function(input, output,  session) ({
   #
   #
   #     incProgress(16/25, detail = paste("..."))
-
-
-
 
      incProgress(25/25, detail = paste("..."))
   #

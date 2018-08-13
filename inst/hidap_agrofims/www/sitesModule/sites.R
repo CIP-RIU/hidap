@@ -3,8 +3,6 @@ source("www/sitesModule/ui_sites.R", local = TRUE)
 register_google(key = "AIzaSyAPWYHA8LkSrhnr1XxBFHuJ3aWeqi-N5lQ")
 
 
-
-
 observeEvent(input$mymap_click, {
   # print(input$mymap_click)
   lat  <- round(input$mymap_click$lat, 5)
@@ -236,17 +234,18 @@ observe({
 
   #After all this conditions has been made, the submit button will appear to save the information
   toggleState("btCreateSite", !
-                is.null(input$inSiteCountry) && str_trim(input$inSiteCountry, side = "both")!= "" &&
+                # is.null(input$inSiteCountry) && str_trim(input$inSiteCountry, side = "both")!= "" &&
+                is.null(input$inSiteCountry) && str_trim(input$inSiteCountry, side = "both")!= ""
 
                 # !is.null(input$inSiteName) && str_trim(input$inSiteName, side = "both")!= "" &&
 
-                  !is.null(input$inSiteAdmin1) && str_trim(input$inSiteAdmin1, side = "both")!= "" &&
-
-                 ((!is.null(input$inSiteAdmin2) && str_trim(input$inSiteAdmin2, side = "both")!="" ) ||
-                   (!is.null(input$inSiteAdmin2_text) && str_trim(input$inSiteAdmin2_text, side = "both")!="")) &&
-
-                ((!is.null(input$inSiteAdmin3) && str_trim(input$inSiteAdmin3, side = "both")!="") ||
-                    (!is.null(input$inSiteAdmin3_text) && str_trim(input$inSiteAdmin3_text, side = "both")!=""))
+                #   !is.null(input$inSiteAdmin1) && str_trim(input$inSiteAdmin1, side = "both")!= "" &&
+                # 
+                #  ((!is.null(input$inSiteAdmin2) && str_trim(input$inSiteAdmin2, side = "both")!="" ) ||
+                #    (!is.null(input$inSiteAdmin2_text) && str_trim(input$inSiteAdmin2_text, side = "both")!="")) &&
+                # 
+                # ((!is.null(input$inSiteAdmin3) && str_trim(input$inSiteAdmin3, side = "both")!="") ||
+                #     (!is.null(input$inSiteAdmin3_text) && str_trim(input$inSiteAdmin3_text, side = "both")!=""))
 
                 # ((!is.null(input$inSiteAdmin4) && str_trim(input$inSiteAdmin4, side = "both")!="") ||
                 #    (!is.null(input$inSiteAdmin4_text) && str_trim(input$inSiteAdmin4_text, side = "both")!="") ) &&
@@ -598,15 +597,6 @@ updateMarkers <- function(){
 #           # addMarkers(data = df)  %>%
 #           setView(lng = -4.04296, lat = 16.30796, zoom = 2) #%>%
 #   )
-
-  
-  
-
-
-
-
-
-
 
 updateSiteRDS <- function(){
   mydb = dbConnect(MySQL(), user=constUserDB, password=constPassDB, dbname=constDBName, host=constDBHost)

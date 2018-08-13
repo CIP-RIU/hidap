@@ -114,8 +114,12 @@ ui <- dashboardPage(
                    br(),
                    div(img(src="hidapicon.png", width = "150px"), style="text-align: center;"),
                    br(),
+                   
+                   ############# HIDAP Fieldbook Registry #############################
                    div(sidebarMenuOutput("menuUser")),
-
+                   ###############################
+                   
+                   
                    # shinyURL.ui(display = FALSE),s
                    #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
                    
@@ -192,9 +196,10 @@ ui <- dashboardPage(
                      #          menuSubItem("Check updates", tabName = "updateHidap",icon = icon("refresh"))#,
                      # ),
                      #
-                     
+                     ############# HIDAP Fieldbook Registry #############################
                      menuItem("Study Registry", tabName = "fielbookRegistry_tab", icon = icon("file-text-o")),#,
-
+                     #####################################################################
+                     
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
 
                    )
