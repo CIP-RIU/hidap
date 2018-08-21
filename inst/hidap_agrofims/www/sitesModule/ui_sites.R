@@ -136,11 +136,15 @@ uiTrialSiteNew <- function(pData = NULL){
              uiOutput("fbsites_ui_admin4"),
              uiOutput("fbsites_ui_admin5"),
              textInput("inSiteNearestPlace", label = "Nearest populated place", value=vData[[11]]), 
-             shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (m.a.s.l.)", value = vData[[12]] )
+             shiny::numericInput(inputId = "inSiteElevation" ,label = "Site elevation (meters)", value = vData[[12]] )
              
              ), 
       column( width = 8,
               br(),
+              HTML("<center>"),
+              radioButtons("mymap_radiobutton_type", "Map view type", c("Default", "Street map", "Geo map"), selected="Default",inline = T),
+              HTML("</center>"),
+              
               leafletOutput("mymap"), 
               fluidRow(
                 column(width = 6, 

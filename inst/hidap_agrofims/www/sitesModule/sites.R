@@ -229,6 +229,23 @@ observeEvent(input$goToMainSiteScreen, {
 
 })
 
+observeEvent(input$mymap_radiobutton_type, {
+
+  if(input$mymap_radiobutton_type == "Street map"){
+    leafletProxy("mymap") %>%
+      addTiles()
+  }
+  else if(input$mymap_radiobutton_type == "Geo map"){
+    leafletProxy("mymap") %>%
+      addProviderTiles(providers$Esri.NatGeoWorldMap)
+  }
+  else{
+    leafletProxy("mymap") %>%
+      addProviderTiles(providers$Stamen.TonerLite,
+                       options = providerTileOptions(noWrap = TRUE))
+  }
+
+})
 
 observe({
 
@@ -316,16 +333,40 @@ output$mymap <- renderLeaflet({
   
   
   
-  # Plot it!
-  leaflet() %>% 
-    setView(lng=LONG, lat=LAT, zoom=ZOOM ) %>%
-    
-    addProviderTiles(providers$Stamen.TonerLite,
-                     options = providerTileOptions(noWrap = TRUE)
-    
-    ) %>%
-    # addTiles() %>%
+  map_type <- isolate(input$mymap_radiobutton_type)
+  
+   
+  
+  if(map_type == "Street map"){
+    leaflet() %>% 
+      setView(lng=LONG, lat=LAT, zoom=ZOOM ) %>%
+        addTiles() %>%
     addMarkers(LONG, LAT)
+  }
+  else if(map_type == "Geo map"){
+    leaflet() %>% 
+      setView(lng=LONG, lat=LAT, zoom=ZOOM ) %>%
+      addProviderTiles(providers$Esri.NatGeoWorldMap)  %>%
+      addMarkers(LONG, LAT)
+  }else{
+    leaflet() %>%
+      setView(lng=LONG, lat=LAT, zoom=ZOOM ) %>%
+
+      addProviderTiles(providers$Stamen.TonerLite,
+                       options = providerTileOptions(noWrap = TRUE)
+      ) %>%
+      addMarkers(LONG, LAT)
+  }
+  
+  # leaflet() %>% 
+  #   setView(lng=LONG, lat=LAT, zoom=ZOOM ) %>%
+  #   
+  #   addProviderTiles(providers$Stamen.TonerLite,
+  #                    options = providerTileOptions(noWrap = TRUE)
+  #   )
+  #    %>%
+  #   # addTiles() %>%
+  #   addMarkers(LONG, LAT)
   
 })
 
