@@ -56,7 +56,7 @@ output$fbsites_ui_admin1 <-renderUI({
   #                multiple  = TRUE ,
   #                options = list(maxItems = 1, placeholder ="Select one..."), selected= vData[[3]] ),
   #
-  selectizeInput("inSiteAdmin1", label= "Site, first-level administrative division name",
+  selectizeInput("inSiteAdmin1", label= "Site, first-level administrative division",
                  choices = admin1,
                  multiple = TRUE,
                  options = list(maxItems = 1, placeholder = 'Select admin 1'),
@@ -86,10 +86,10 @@ output$fbsites_ui_admin2 <-renderUI({
 
 
   if(is.na(admin2) && is.null(admin1)){
-    textInput("inSiteAdmin2_text", label = "Site, second-level administrative division name", value= selAdmin2) #)vData[[7]])
+    textInput("inSiteAdmin2_text", label = "Site, second-level administrative division", value= selAdmin2) #)vData[[7]])
   } else {
 
-    selectizeInput("inSiteAdmin2", label= "Site, second-level administrative division name", multiple = TRUE,
+    selectizeInput("inSiteAdmin2", label= "Site, second-level administrative division", multiple = TRUE,
                    choices = admin2,
                    selected= selAdmin2,
                    options = list(maxItems = 1, placeholder = 'Select admin 2'))
@@ -124,10 +124,10 @@ output$fbsites_ui_admin3 <-renderUI({
   }
 
   if(is.na(admin3)){
-  textInput("inSiteAdmin3_text", label = "Site, third-level administrative division name", value= selAdmin3) #)vData[[7]])
+  textInput("inSiteAdmin3_text", label = "Site, third-level administrative division", value= selAdmin3) #)vData[[7]])
   } else {
 
-  selectizeInput("inSiteAdmin3", label= "Site, third-level administrative division name", multiple = TRUE,
+  selectizeInput("inSiteAdmin3", label= "Site, third-level administrative division", multiple = TRUE,
                  choices = admin3,
                  selected= selAdmin3,
                  options = list(maxItems = 1, placeholder = 'Select admin 3'))
@@ -166,10 +166,10 @@ output$fbsites_ui_admin4 <-renderUI({
 
   if(is.na(admin4)){
 
-  textInput("inSiteAdmin4_text", label = "Site, fourth-level administrative division name", value= selAdmin4) #)vData[[7]])
+  textInput("inSiteAdmin4_text", label = "Site, fourth-level administrative division", value= selAdmin4) #)vData[[7]])
   } else {
 
-  selectizeInput("inSiteAdmin4", label= "Site, fourth-level administrative division name", multiple = TRUE,
+  selectizeInput("inSiteAdmin4", label= "Site, fourth-level administrative division", multiple = TRUE,
                  choices = admin4,
                  selected= selAdmin4,
                  options = list(maxItems = 1, placeholder = 'Select admin 4'))
@@ -209,11 +209,11 @@ output$fbsites_ui_admin5 <-renderUI({
 
   if(is.na(admin5)){
 
-    textInput("inSiteAdmin5_text", label = "Site, fifth-level administrative division name", value= selAdmin5) #)vData[[7]])
+    textInput("inSiteAdmin5_text", label = "Site, fifth-level administrative division", value= selAdmin5) #)vData[[7]])
 
   } else {
 
-    selectizeInput("inSiteAdmin5", label= "Site, fifth-level administrative division name", multiple = TRUE,
+    selectizeInput("inSiteAdmin5", label= "Site, fifth-level administrative division", multiple = TRUE,
                  choices = admin5,
                  selected= selAdmin5,
                  options = list(maxItems = 1, placeholder = 'Select admin 5'))
