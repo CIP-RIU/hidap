@@ -200,7 +200,7 @@ observe({
     output$menuUser <- renderMenu({
       sidebarMenu(id ="networkMenu",
                   fluidRow(
-                    div(img(src="logo_agrofims_test.png", width = "150px"), style="text-align: center;"),
+                    div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
                     br()
                   ),
                   fluidRow(
@@ -284,7 +284,7 @@ observe({
     output$menuUser <- renderMenu({
       sidebarMenu(id ="networkMenu",
                   fluidRow(
-                    div(img(src="logo_agrofims_test.png", width = "150px"), style="text-align: center;"),
+                    div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
                     br()
                   ),
                   fluidRow(

@@ -37,7 +37,7 @@ uiTrialScreenMain <- function(){
         title = "Map",
         # title = tagList(shiny::icon("list-ol"), "List Site information"),
         status = "primary", solidHeader = TRUE, collapsible = TRUE, width = 12,
-        actionButton("btShowMap", "View sites",  class = "btn-primary",style="color: #fff;"),br(), br(),
+        # actionButton("btShowMap", "View sites",  class = "btn-primary",style="color: #fff;"),br(), br(),
         column( width = 12,
                 leafletOutput("mymap1a", "100%", "550px")
                 # leaflet() %>%

@@ -600,30 +600,50 @@ observeEvent(input$btUpdateSite, {
   }
 })
 
+output$mymap1a <- renderLeaflet(
+ 
+  
+  leaflet() %>%
+    addTiles() %>%  # Add default OpenStreetMap map tiles
+    # addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
+    setView(lng = -4.04296, lat = 16.30796, zoom = 2) %>%
+    addMarkers(data = mauxf())
+)
 
-observeEvent(input$btShowMap, {
-  # print("clicked")  
-  output$mymap1a <- renderLeaflet(
-    leaflet() %>%
-      addTiles() %>%  # Add default OpenStreetMap map tiles
-      # addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
-      setView(lng = -4.04296, lat = 16.30796, zoom = 2) #%>%
-  )
-  updateMarkers()
-})
-
-
-updateMarkers <- function(){
-  len <- nrow(dt$trialSites)
-  isolate({
-    leafletProxy("mymap1a") %>% clearMarkers()
-    for (i in 1:len){
-      leafletProxy("mymap1a") %>%
-        addMarkers(lng=as.numeric(dt$trialSites[i,13]), lat=as.numeric(dt$trialSites[i,14]))
-    }
-  })
-
+mauxf <- function(){
+  mdata <- as.data.frame(lapply(dt$trialSites[,13:14], as.numeric))
+  # mdata[["popup"]] <- lapply(dt$trialSites[,1], as.character)
+  mdata[["popup"]] <- dt$trialSites[,2]
+  names(mdata) <- c("latitude", "longitude", "popup")
+  # print(mdata)
+  return(mdata)
 }
+
+# observeEvent(input$btShowMap, {
+# 
+#   output$mymap1a <- renderLeaflet(
+#     leaflet() %>%
+#       addTiles() %>%  # Add default OpenStreetMap map tiles
+#       # addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
+#       setView(lng = -4.04296, lat = 16.30796, zoom = 2) #%>%
+#   )
+#   updateMarkers()
+# })
+
+
+# updateMarkers <- function(){
+#   
+#   len <- nrow(dt$trialSites)
+#   leafletProxy("mymap1a") %>%
+#           addMarkers(lng=as.numeric(dt$trialSites[1,13]), lat=as.numeric(dt$trialSites[1,14]))
+#   isolate({
+#     # leafletProxy("mymap1a") %>% clearMarkers()
+#     for (i in 1:len){
+#       leafletProxy("mymap1a") %>%
+#         addMarkers(lng=as.numeric(dt$trialSites[i,13]), lat=as.numeric(dt$trialSites[i,14]))
+#     }
+#   })
+# }
 
 # df1 = data.frame(
 #   lat = dt$trialSites[,13],
@@ -707,7 +727,7 @@ observeEvent(input$siteClick,{
     dt$trialSites <- deleteSite(row_to_delete)
     names(dt$trialSites) <- columnNames
     shinyalert("Success", "Site was successfully deleted", type = "success")
-    updateMarkers()
+    # updateMarkers()
   }
 })
 
