@@ -23,7 +23,7 @@ uiTrialScreenMain <- function(){
       box(
         #shinysky::showshinyalert(session, "alert_hagroSites", paste("New site has been successfully added"), styleclass = "success"),
         # title = " List site information",
-        title = tagList(shiny::icon("list-ol"), "List Site information"),
+        title = tagList(shiny::icon("list-ol"), "List site information"),
         status = "primary", solidHeader = TRUE,
         collapsible = TRUE, width = 12,
         

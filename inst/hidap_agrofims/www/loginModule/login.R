@@ -6,16 +6,27 @@ listCountries <- c('Aruba','Afghanistan','Angola','Anguilla','Albania','Andorra'
 
 # modal to show when app is launched
 showModal(modalDialog(
-  title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#f7941d'><h2> Welcome to HiDAP AgroFIMS</h2></font> </center>"),
-  HTML("<div style='height: 200px;'><p>The Agronomy Field Information Management System (AgroFIMS) has been developed on CGIAR’s HiDAP (Highly-interactive Data Analysis Platform created by CGIAR’s International Potato Center, CIP). AgroFIMS draws fully on ontologies, particularly the Agronomy Ontology and the Crop Ontology. It consists of modules that represent the typical cycle of operations in agronomic trial management, and enables the creation of data collection sheets using the same ontology-based set of variables, terminology, units and protocols.</p><div>"),
+  title = HTML("
+          <div id='modaltitle'><center>WELCOME to HIDAP AgroFIMS</center></div>
+          <div><p><center><img src='img/BIG-DATA.png' id='modalimg'></center></p></div>
+          "),
+  includeHTML("www/loginModule/modaltext.txt"),
+  fluidRow(
+    column(
+      12, br(),
+      column(6, align = "left", fluidRow(actionButton("closeModal", "Continue", class = "btn-primary"))),
+      column(6, align = "right", fluidRow(actionButton("btLoginModal", "Log in")))
+    )
+  ),
   easyClose = FALSE,
-  footer = tagList(
-    # modalButton("Continue with Open Version"),
-    div(style="display:inline-block",
-    #actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
-    actionButton("closeModal", "Continue", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
-    actionButton("btLoginModal", "Log in", style=" font-size:150%;", width = 150), style="float:right;text-align:center")
-  )
+  footer = NULL
+  # footer = tagList(
+  #   # modalButton("Continue with Open Version"),
+  #   div(style="display:inline-block",
+  #   #actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
+  #   actionButton("closeModal", "Continue", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+  #   actionButton("btLoginModal", "Log in", style=" font-size:150%;", width = 150), style="float:right;text-align:center")
+  # )
 ))
 
 # modal to show to user to login or register
@@ -31,16 +42,27 @@ observeEvent(input$closeModal, {
 # when user wants to go to welcome modal (modal when app is launched)
 observeEvent(input$goBackModal, {
   showModal(modalDialog(
-    title = HTML("<center><img src='cgiar-bigdata.png'></center>  <center><font color='#f7941d'><h2> Welcome to HiDAP AgroFIMS<h2></font> </center>"),
-    HTML("<div style='height: 200px;'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. <b>Lorem ipsum dolor sit amet, consectetur adipiscing elit</b>. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. </p><div>"),
+    title = HTML("
+          <div id='modaltitle'><center>WELCOME to HIDAP AgroFIMS</center></div>
+          <div><p><center><img src='img/BIG-DATA.png' id='modalimg'></center></p></div>
+          "),
+    includeHTML("www/loginModule/modaltext.txt"),
+    fluidRow(
+      column(
+        12, br(),
+        column(6, align = "left", fluidRow(actionButton("closeModal", "Continue", class = "btn-primary"))),
+        column(6, align = "right", fluidRow(actionButton("btLoginModal", "Log in")))
+      )
+    ),
     easyClose = FALSE,
-    footer = tagList(
-      # modalButton("Continue with Open Version"),
-      div(style="display:inline-block",
-          #actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
-          actionButton("closeModal", "Continue", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
-          actionButton("btLoginModal", "Log in", style=" font-size:150%;", width = 150), style="float:right;text-align:center")
-    )
+    footer = NULL
+    # footer = tagList(
+    #   # modalButton("Continue with Open Version"),
+    #   div(style="display:inline-block",
+    #       #actionButton("closeModal", "Continue", style="color: #fff; background-color: #35b872; font-size:170%;", width = 150),
+    #       actionButton("closeModal", "Continue", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+    #       actionButton("btLoginModal", "Log in", style=" font-size:150%;", width = 150), style="float:right;text-align:center")
+    # )
   ))
 })
 
@@ -66,51 +88,105 @@ validateEmail <- function(mail){
 # to show login modal when called from welcome modal
 loginModal <- function(message = ""){
   modalDialog(
-    title = HTML("<center><font color='#f7941d'><h2> Log in to HiDAP AGROFIMS </h2></font></center>"),
-    div(
-      textInput("userName", "Username:", value = getLoginInput("username")),
-      passwordInput("passwd", "Password:", value = getLoginInput("password")),
-      checkboxInput("rememberMe","Remember me", T),
-      HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
+    #title = HTML("<center><font color='#f7941d'><h2> Log in to HiDAP AGROFIMS </h2></font></center>"),
+    title = HTML("
+          <div id='modaltitle'><center>Log in to HIDAP AgroFIMS</center></div>
+          <!--<div><p><center><img src='img/BIG-DATA.png' id='modalimg'></center></p></div>-->
+          "),
+    fluidRow(
+      column(
+        12,
+        textInput("userName", "Email", "100%", value = getLoginInput("username")),
+        passwordInput("passwd", "Password", "100%", value = getLoginInput("password")),
+        checkboxInput("rememberMe","Remember me", T),
+        br(),
+        column(6, align = "left", fluidRow(actionButton("goBackModal", "Back"))),
+        column(6, align = "right", fluidRow(actionButton("checkLogin", "Log in", class = "btn-primary")))
+      )
     ),
+    fluidRow(
+      column(
+        12, align = "right", br(),
+        a( "Forgot your password?", href="#shiny-tab-forgotPass","data-toggle"="tab"),
+        " | ",
+        a( "Sign up", href="#shiny-tab-register","data-toggle"="tab")
+      )
+    ),
+    # div(
+    #   textInput("userName", "Username:", value = getLoginInput("username")),
+    #   passwordInput("passwd", "Password:", value = getLoginInput("password")),
+    #   checkboxInput("rememberMe","Remember me", T),
+    #   HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
+    # ),
 
     # actionLink("ForgotPass", "Forgot your password?"), br(),
     # actionLink("CreateAccount", "Not a user yet? Create an account."),
-    a( "Forgot your password?", href="#shiny-tab-forgotPass","data-toggle"="tab"),
-    br(),
-    a( "Not a user yet? Create an account.", href="#shiny-tab-register","data-toggle"="tab"),
+    # a( "Forgot your password?", href="#shiny-tab-forgotPass","data-toggle"="tab"),
+    # br(),
+    # a( "Not a user yet? Create an account.", href="#shiny-tab-register","data-toggle"="tab"),
 
     easyClose = FALSE,
-    footer = tagList(
-      div(style="display:inline-block",
-      actionButton("checkLogin", "Log in", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
-      actionButton("goBackModal", "Go back", style=" font-size:150%;", width = 150),
-      style="float:right;text-align:center"))
+    footer = (
+      div("© 2018 RIU Team. | All Rights Reserved | Terms Of Use")
+    )
+    #footer = NULL
+    # footer = tagList(
+    #   div(style="display:inline-block",
+    #   actionButton("checkLogin", "Log in", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+    #   actionButton("goBackModal", "Go back", style=" font-size:150%;", width = 150),
+    #   style="float:right;text-align:center"))
   )
 }
 
 # when the modal is called from sidebar menu
 loginModalMenu <- function(message = ""){
   modalDialog(
-    title = HTML("<center><font color='#f7941d'><h2> Log in to HiDAP AGROFIMS </h2></font></center>"),
-    div(
-      textInput("userName", "Username:", getLoginInput("username")),
-      passwordInput("passwd", "Password:", getLoginInput("password")),
-      checkboxInput("rememberMe","Remember me", T),
-      HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
+    title = HTML("
+          <div id='modaltitle'><center>Log in to HIDAP AgroFIMS</center></div>
+          <!--<div><p><center><img src='img/BIG-DATA.png' id='modalimg'></center></p></div>-->
+          "),
+    fluidRow(
+      column(
+        12,
+        textInput("userName", "Email", "100%", value = getLoginInput("username")),
+        passwordInput("passwd", "Password", "100%", value = getLoginInput("password")),
+        checkboxInput("rememberMe","Remember me", T),
+        br(),
+        column(6, align = "left", fluidRow(actionButton("closeModal", "Close"))),
+        column(6, align = "right", fluidRow(actionButton("checkLogin", "Log in", class = "btn-primary")))
+      )
     ),
+    fluidRow(
+      column(
+        12, align = "right", br(),
+        a( "Forgot your password?", href="#shiny-tab-forgotPass","data-toggle"="tab"),
+        " | ",
+        a( "Sign up", href="#shiny-tab-register","data-toggle"="tab")
+      )
+    ),
+    br(),
+    # div(
+    #   textInput("userName", "Username:", getLoginInput("username")),
+    #   passwordInput("passwd", "Password:", getLoginInput("password")),
+    #   checkboxInput("rememberMe","Remember me", T),
+    #   HTML( paste0("<center><h4><font color='red'> ", message, " <font/><h4/><center/>"))
+    # ),
 
     # actionLink("ForgotPass", "Forgot your password?"), br(),
     # actionLink("CreateAccount", "Not a user yet? Create an account."),
-    a( "Forgot your password?", href="#shiny-tab-forgotPass","data-toggle"="tab"),
-    br(),
-    a( "Not a user yet? Create an account.", href="#shiny-tab-register","data-toggle"="tab"),
-
+    # a( "Forgot your password?", href="#shiny-tab-forgotPass","data-toggle"="tab"),
+    # br(),
+    # a( "Not a user yet? Create an account.", href="#shiny-tab-register","data-toggle"="tab"),
+    tags$div(id = "error", align = "center", message),
     easyClose = FALSE,
-    footer = tagList(
-      div(style="display:inline-block",
-      actionButton("checkLogin", "Log in", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
-      actionButton("closeModal", "Close", style=" font-size:150%;", width = 150), style="float:right;text-align:center"))
+    footer = (
+      div("© 2018 RIU Team. | All Rights Reserved | Terms Of Use")
+    )
+    #footer = NULL
+    # footer = tagList(
+    #   div(style="display:inline-block",
+    #   actionButton("checkLogin", "Log in", style="color: #fff;font-size:150%;", class = "btn-primary", width = 150),
+    #   actionButton("closeModal", "Close", style=" font-size:150%;", width = 150), style="float:right;text-align:center"))
   )
 }
 
@@ -195,39 +271,77 @@ observe({
     session$userData$userId <- USER$id
     
     # menu to be shown with hidap network options when the users logs in
+    #output$help <- renderText("Help", icon("question-circle"))
     
-    output$userLoggedText <- renderText(paste0("Hello, ", USER$fname)) 
-    output$menuUser <- renderMenu({
-      sidebarMenu(id ="networkMenu",
-                  fluidRow(
-                    div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
-                    br()
-                  ),
-                  fluidRow(
-                    column(width = 2),
-                    column(width = 3,
-                           div(icon("user-circle", "fa-2x"), style="text-align: right;padding-top: 7px;")
-                    ),
-                    column(width = 1),
-                    column(width = 6,
-                           div(uiOutput("userLoggedText"), style="text-align: left;"),
-                           div(icon("circle"), "Connected", style="text-align: left;")
-                  )),
-
-                  #br(),
-                  menuItem("My account", icon = icon("address-book-o"),
-                    menuSubItem("My Profile", tabName = "userProfile", icon = icon("user")),
-                    menuSubItem("Change Password", tabName = "changePass", icon = icon("lock"))
-                  ),
-                  #br(),
-                div(style="padding-left: 90px",actionButton("btLogOut", "Log Out", icon=icon("sign-out"), style='padding:4px;font-size:70%'))
-
-
+    #output$userLoggedText <- renderText(paste0("Hello, ", USER$fname))
+    output$userLoggedTextRight <- renderUI(div(img(src="img/green_v2.png", id="accountlogo"), paste0("Account: ", USER$fname)))
+    #output$userLoggedTextRight <- renderText(paste0("Account: ", USER$fname))
+    
+    output$menuHeader <- renderMenu({
+      dropdownMenu(
+        headerText = "...",
+        icon = icon("user", "fa-lg"),
+        badgeStatus = NULL,
+        tags$li(
+          class = "dropdown",
+          a(
+            icon("male"),
+            "Profile",
+            onclick = "openTab('userProfile')",
+            href = NULL,
+            style = "cursor: pointer;"
+          )
+        ),
+        tags$li(
+          class = "dropdown",
+          a(
+            icon("key"),
+            "Authentication",
+            onclick = "openTab('changePass')",
+            href = NULL,
+            style = "cursor: pointer;"
+          )
+        ),
+        tags$li(
+          class = "dropdown",
+          actionLink("btLogOut", "Log Out", icon = icon("sign-out"))
+        )
       )
     })
+    
+    # output$menuUser <- renderMenu({
+    #   sidebarMenu(id ="networkMenu",
+    #               fluidRow(
+    #                 div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
+    #                 br()
+    #               ),
+    #               fluidRow(
+    #                 column(width = 2),
+    #                 column(width = 3,
+    #                        div(icon("user-circle", "fa-2x"), style="text-align: right;padding-top: 7px;")
+    #                 ),
+    #                 column(width = 1),
+    #                 column(width = 6,
+    #                        div(uiOutput("userLoggedText"), style="text-align: left;"),
+    #                        div(icon("circle"), "Connected", style="text-align: left;")
+    #               )),
+    # 
+    #               #br(),
+    #               menuItem("My account", icon = icon("address-book-o"),
+    #                 menuSubItem("My Profile", tabName = "userProfile", icon = icon("user")),
+    #                 menuSubItem("Change Password", tabName = "changePass", icon = icon("lock"))
+    #               ),
+    #               #br(),
+    #             div(style="padding-left: 90px",actionButton("btLogOut", "Log Out", icon=icon("sign-out"), style='padding:4px;font-size:70%'))
+    # 
+    # 
+    #   )
+    # })
 
     output$menu <- renderMenu({
       sidebarMenu(
+        div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
+        br(),
         # menuItem("Drive", tabName = "driveNet", icon = icon("archive")),
         menuItem("Site information", tabName = "trialSite", icon = icon("location-arrow")),
         menuItem("Fieldbook", icon = icon("book"),
@@ -249,10 +363,15 @@ observe({
         menuItem("Documentation",  icon = icon("copy")
         ),
 
-        menuItem("Help",  icon = icon("question-circle")
-        ),
-
-        menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)
+        # menuItem("Help",  icon = icon("question-circle")
+        # ),
+        
+        menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE),
+        br(),
+        menuItem("Account", icon = icon("user"),
+                 menuSubItem("Profile", tabName = "userProfile", icon = icon("angle-right")),
+                 menuSubItem("Authentication", tabName = "changePass", icon = icon("angle-right"))
+        )
       )
     })
 
@@ -280,26 +399,42 @@ observe({
     session$userData$userId <- NULL
 
     hideTab(inputId = "tabs", target = "Foo")
-
-    output$menuUser <- renderMenu({
-      sidebarMenu(id ="networkMenu",
-                  fluidRow(
-                    div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
-                    br()
-                  ),
-                  fluidRow(
-                    column(width = 12,
-                           div("Hello, Guest", style="text-align: center;"),
-                           div(icon("circle-o"), "Not connected", style="text-align: center;")
-                    )),
-
-                  div(style="padding-left: 90px",actionButton("btLogIn", "Log in", icon=icon("sign-in"), style='padding:4px;font-size:70%'))
+    output$userLoggedTextRight <- renderUI(div(img(src="img/red_v2.png", id="accountlogo"), "Guest"))
+    #output$help <- renderText("Help")
+    
+    output$menuHeader <- renderMenu({
+      dropdownMenu(
+        headerText = "...",
+        icon = icon("user-times", "fa-lg"),
+        badgeStatus = NULL,
+        tags$li(
+          class = "dropdown",
+          actionLink("btLogIn", "Log In", icon = icon("sign-in"))
+        )
       )
     })
+
+    # output$menuUser <- renderMenu({
+    #   sidebarMenu(id ="networkMenu",
+    #               fluidRow(
+    #                 div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
+    #                 br()
+    #               ),
+    #               fluidRow(
+    #                 column(width = 12,
+    #                        div("Hello, Guest", style="text-align: center;"),
+    #                        div(icon("circle-o"), "Not connected", style="text-align: center;")
+    #                 )),
+    # 
+    #               div(style="padding-left: 90px",actionButton("btLogIn", "Log in", icon=icon("sign-in"), style='padding:4px;font-size:70%'))
+    #   )
+    # })
 
 
     output$menu <- renderMenu({
       sidebarMenu(
+            div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
+            br(),
             menuItem("Fieldbook", icon = icon("book"),
                      menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file"))#,
 
@@ -311,8 +446,8 @@ observe({
             ),
             menuItem("Documentation",  icon = icon("copy")
             ),
-            menuItem("Help",  icon = icon("question-circle")
-            ),
+            # menuItem("Help",  icon = icon("question-circle")
+            # ),
             menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)
       )
     })
@@ -498,6 +633,7 @@ observeEvent(input$btLogIn, {
 observeEvent(input$btLogOut, {
   js$rmcookie()
   USER$Logged <- FALSE
+  showModal(loginModalMenu())
 })
 
 ###########################################################################################################
