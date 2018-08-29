@@ -31,10 +31,15 @@
   width: 20px;
 }
 
-/* Ancho del modal del login */
-.modal-dialog {
-  width: 550px;
+/* Color de los items de menu del dropdownmenu cuando la pantalla se reduce a movile app */
+.skin-blue .main-header .navbar .dropdown-menu li a {
+    color: #3c8dbc;
 }
+
+/* Ancho del modal del login */
+/*.modal-dialog {
+  width: 550px;
+}*/
 
 /* Titulo del modal */
 #modaltitle {

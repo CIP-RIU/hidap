@@ -14,8 +14,8 @@ showModal(modalDialog(
   fluidRow(
     column(
       12, br(),
-      column(6, align = "left", fluidRow(actionButton("closeModal", "Continue", class = "btn-primary"))),
-      column(6, align = "right", fluidRow(actionButton("btLoginModal", "Log in")))
+      column(6, align = "center", fluidRow(actionButton("closeModal", "Continue", class = "btn-primary"))),
+      column(6, align = "center", fluidRow(actionButton("btLoginModal", "Log in")))
     )
   ),
   easyClose = FALSE,
@@ -50,8 +50,8 @@ observeEvent(input$goBackModal, {
     fluidRow(
       column(
         12, br(),
-        column(6, align = "left", fluidRow(actionButton("closeModal", "Continue", class = "btn-primary"))),
-        column(6, align = "right", fluidRow(actionButton("btLoginModal", "Log in")))
+        column(6, align = "center", fluidRow(actionButton("closeModal", "Continue", class = "btn-primary"))),
+        column(6, align = "center", fluidRow(actionButton("btLoginModal", "Log in")))
       )
     ),
     easyClose = FALSE,
@@ -100,8 +100,8 @@ loginModal <- function(message = ""){
         passwordInput("passwd", "Password", "100%", value = getLoginInput("password")),
         checkboxInput("rememberMe","Remember me", T),
         br(),
-        column(6, align = "left", fluidRow(actionButton("goBackModal", "Back"))),
-        column(6, align = "right", fluidRow(actionButton("checkLogin", "Log in", class = "btn-primary")))
+        column(6, align = "center", fluidRow(actionButton("goBackModal", "Back"))),
+        column(6, align = "center", fluidRow(actionButton("checkLogin", "Log in", class = "btn-primary")))
       )
     ),
     fluidRow(
@@ -152,8 +152,8 @@ loginModalMenu <- function(message = ""){
         passwordInput("passwd", "Password", "100%", value = getLoginInput("password")),
         checkboxInput("rememberMe","Remember me", T),
         br(),
-        column(6, align = "left", fluidRow(actionButton("closeModal", "Close"))),
-        column(6, align = "right", fluidRow(actionButton("checkLogin", "Log in", class = "btn-primary")))
+        column(6, align = "center", fluidRow(actionButton("closeModal", "Close"))),
+        column(6, align = "center", fluidRow(actionButton("checkLogin", "Log in", class = "btn-primary")))
       )
     ),
     fluidRow(
