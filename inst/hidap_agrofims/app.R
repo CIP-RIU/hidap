@@ -120,7 +120,7 @@ ui <- dashboardPage(
   
   dashboardHeader(
     title = "",
-    titleWidth = "250px",
+    #titleWidth = "250px",
     tags$li(class = "dropdown", tags$a(icon("question-circle"), "Help")),
     #tags$li(class = "dropdown", tags$a(uiOutput("help"))),
     tags$li(class = "dropdown", tags$a(uiOutput("userLoggedTextRight"))),
@@ -128,7 +128,7 @@ ui <- dashboardPage(
   ),
   
   dashboardSidebar(
-    width = "250px",
+    #width = "250px",
     div(sidebarMenuOutput("menuUser")),
     sidebarMenu(
       id = "tabs",
@@ -238,7 +238,7 @@ ui <- dashboardPage(
           a(
             list(
               #tags$div(id = "test", img(src="cc_by.png"), "2018 International Potato Center. Av La Molina 1895, La Molina - Peru.")
-              tags$div(id = "test", "Powered by HIDAP")
+              tags$div(id = "test", "Powered by HIDAP | Terms of Use & Privacy Policy")
             ),
             href="#"
           ),
@@ -269,6 +269,9 @@ sv <- function(input, output,  session) ({
   #### Login
   session$userData$logged <- F
   session$userData$userId <- NULL
+  session$userData$userLname <- NULL
+  session$userData$userFname <- NULL
+  session$userData$userMail <- NULL
 
   USER <- reactiveValues(Logged = FALSE, username = NULL, id = NULL, fname = NULL, lname = NULL, org=NULL, country=NULL)
   ####

@@ -270,6 +270,10 @@ observe({
     session$userData$logged <- TRUE
     session$userData$userId <- USER$id
     
+    session$userData$userLname <- USER$lname
+    session$userData$userFname <- USER$fname
+    session$userData$userMail <- USER$username
+    
     # menu to be shown with hidap network options when the users logs in
     #output$help <- renderText("Help", icon("question-circle"))
     
@@ -345,7 +349,7 @@ observe({
         # menuItem("Drive", tabName = "driveNet", icon = icon("archive")),
         menuItem("Site information", tabName = "trialSite", icon = icon("location-arrow")),
         menuItem("Fieldbook", icon = icon("book"),
-                 menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file"))#,
+                 menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("angle-right"))#,
 
                  #menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
                  #menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
@@ -353,7 +357,7 @@ observe({
         
         menuItem("Single Trial Analysis", icon = icon("bar-chart"),
                  #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-                 menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("file-text-o"))#,
+                 menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("angle-right"))#,
                  #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
                  
                  #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
@@ -436,13 +440,13 @@ observe({
             div(img(src="images/logo_agrofims_v3.jpg"), style="text-align: center;"),
             br(),
             menuItem("Fieldbook", icon = icon("book"),
-                     menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("file"))#,
+                     menuSubItem("Create fieldbook", tabName = "newFieldbookAgrofims", icon = icon("angle-right"))#,
 
                      #menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
                      #menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))
             ),
             menuItem("Single Trial Analysis", icon = icon("bar-chart"),
-                     menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("file-text-o"))
+                     menuSubItem("Single report", tabName = "singleAnalysisReportAgrofims", icon = icon("angle-right"))
             ),
             menuItem("Documentation",  icon = icon("copy")
             ),
