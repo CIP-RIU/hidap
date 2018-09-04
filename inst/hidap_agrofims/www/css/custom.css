@@ -2,6 +2,7 @@
 .content-wrapper,
 .right-side {
   background-color: #fff;
+  margin-top: 50px;
 }
 
 /* Posicion del logo account en el header */
@@ -203,6 +204,11 @@
 .checkbox, .radio {
  margin-top: 0px;
  margin-bottom: -20px;
+}
+
+.main-header {
+    position: fixed;
+    width: 100%;
 }
 
 /*box(
