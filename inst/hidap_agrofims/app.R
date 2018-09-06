@@ -69,6 +69,7 @@ library(sp)
 library(shinyStore) # install_github("trestletech/shinyStore")
 library(PKI) # CRAN
 library(shinyWidgets)
+library(fbsession)
 # library(shinyURL)
 # library(fbmet)
 # library(fbhelp)
@@ -229,6 +230,7 @@ ui <- dashboardPage(
       ),
 
       fbdesign::ui_fieldbook_agrofims(name = "newFieldbookAgrofims"),
+      fbsession::ui_session(name = "opensession"),
       fbanalysis::single_hdagrofims_ui(name="singleAnalysisReportAgrofims")#,
     ),
 
@@ -314,6 +316,7 @@ sv <- function(input, output,  session) ({
 
 
   fbdesign::server_design_agrofims(input, output, session, values)
+  fbsession::server_session(input, output, session, values)
   # fbdesign::server_design_big(input, output, session, values)
   # fbopenbooks::fbopenbooks_server(input, output, session, values)
   fbanalysis::single_hdagrofims_server(input, output, session, values)
