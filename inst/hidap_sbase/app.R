@@ -387,7 +387,7 @@ ui <- dashboardPage(
 
 sv <- function(input, output, session) ({
 
-   shinyURL.server()
+  shinyURL.server(session = session)
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
   
   
