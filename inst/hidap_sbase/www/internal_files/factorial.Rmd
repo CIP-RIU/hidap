@@ -44,34 +44,36 @@ maxp <- params$maxp
 
 out <- ck.fs(factors, rep, dfr)
 dfr <- out$dfr
-nla <- out$nl[1]
-nlb <- out$nl[2]
+nf <- out$nf
+nl <- out$nl
 nrep <- out$nrep
 nmis.fac <- out$nmis.fac
 
+# Texts for levels
+
+text.levels <- out$nl[1]
+for (i in 2:(nf - 1))
+  text.levels <- paste0(text.levels, ', ', nl[i])
+text.levels <- paste0(text.levels, ', and ', nl[nf])
+
+# Text for design
+
+if (design == 'crd')
+  text.design <- 'completely randomized design'
+if (design == 'rcbd')
+  text.design <- 'randomized complete block design'
+  
 # Everything as character
 
-dfr[, factors[1]] <- as.character(dfr[, factors[1]])
-dfr[, factors[2]] <- as.character(dfr[, factors[2]])
+for (i in 1:nf) 
+  dfr[, factors[i]] <- as.character(dfr[, factors[i]])
 dfr[, rep] <- as.character(dfr[, rep])
 ```
 
 # 1. Model specification and data description
 
-The data frame has two factors with `r nla` and `r nlb` levels. The experimental design is a completely randomized design with `r nrep` replications. The statistical model is
-$$
-y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}
-$$
-where
-
-* $y_{ijk}$ is the observed response with level $i$ of factor A, level $j$ of factor B, and replication $k$.
-* $\mu$ is the mean response over all levels of factor A, factor B, and replications.
-* $\alpha_i$ is the effect for level $i$ of factor A.
-* $\beta_j$ is the effect for level $j$ of factor B.
-* $(\alpha\beta)_{ij}$ is the interaction effect between level $i$ of factor A and level $j$ of factor B.
-* $\epsilon_{ijk}$ is the error term.
-
-In this model we assume that the errors are independent and have a normal distribution with common variance, that is, $\epsilon_{ijk} \sim N(0,\sigma_{\epsilon}^2)$.
+The data frame has data for a full factorial with `r nf` factors with `r text.levels` levels. The experimental design is a `r text.design` with `r nrep` replications. 
+In this model we assume that the errors are independent and have a normal distribution with common variance.
 
 `r if (nmis.fac == 1) paste("Note: There is", nmis.fac, "row with missing values for classifications factors. This row has been deleted.")`
 `r if (nmis.fac > 1) paste("Note: There are", nmis.fac, "rows with missing values for classifications factors. These rows have been deleted.")`

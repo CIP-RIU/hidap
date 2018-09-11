@@ -85,7 +85,7 @@ library(shinyalert)
 library(stringi)
 
 #active URL
-# library(shinyURL)
+ library(shinyURL)
 
 
 print("WD de APP")
@@ -99,7 +99,7 @@ getwd()
 # remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
 # into HIDAP working dir by installer
 #Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
-source("www/login_module/dbData.R", local = TRUE)
+#source("www/login_module/dbData.R", local = TRUE)
 
 ui <- dashboardPage(
   skin = "yellow",
@@ -116,11 +116,11 @@ ui <- dashboardPage(
                    br(),
                    
                    ############# HIDAP Fieldbook Registry #############################
-                   div(sidebarMenuOutput("menuUser")),
+                   # div(sidebarMenuOutput("menuUser")),
                    ###############################
                    
                    
-                   # shinyURL.ui(display = FALSE),s
+                   shinyURL.ui(display =FALSE),#s
                    #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
                    
                    # sidebarMenuOutput("menu")
@@ -197,7 +197,7 @@ ui <- dashboardPage(
                      # ),
                      #
                      ############# HIDAP Fieldbook Registry #############################
-                     menuItem("Study Registry", tabName = "fielbookRegistry_tab", icon = icon("file-text-o")),#,
+                     #menuItem("Study Registry", tabName = "fielbookRegistry_tab", icon = icon("file-text-o")),#,
                      #####################################################################
                      
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
@@ -282,22 +282,23 @@ ui <- dashboardPage(
               br()
       ),
 
-      tabItem(tabName = "integration",
-              fluidRow(
-                box(
-                  title = "CIPFBS report", width = 12, status = "primary", solidHeader = TRUE, collapsible = TRUE,
-                  tags$iframe(src = "http://176.34.251.32/cipfieldbookstorage_dev/protected/extensions/grid/demo.php",
-                              seamless=NA, width = "100%", height = "800px"
-                  )
-                )
-              ),
-
-              br(),
-              br(),
-              br()
-      ),
-      
-      tabItem(tabName = "fielbookRegistry_tab", uiOutput("fbregistry_login_message"), box(status="primary",title = "Study Registry",  width = 12, solidHeader = T, collapsible = T, uiOutput("tab_fb_registry_above"), column(12,dataTableOutput("fb_registry_table")), uiOutput("tab_fb_registry_below"))),
+      # tabItem(tabName = "integration",
+      #         fluidRow(
+      #           box(
+      #             title = "CIPFBS report", width = 12, status = "primary", solidHeader = TRUE, collapsible = TRUE,
+      #             tags$iframe(src = "http://176.34.251.32/cipfieldbookstorage_dev/protected/extensions/grid/demo.php",
+      #                         seamless=NA, width = "100%", height = "800px"
+      #             )
+      #           )
+      #         ),
+      # 
+      #         br(),
+      #         br(),
+      #         br()
+      # ),
+      # 
+      ##### Fieldbook Registry ########
+      #tabItem(tabName = "fielbookRegistry_tab", uiOutput("fbregistry_login_message"), box(status="primary",title = "Study Registry",  width = 12, solidHeader = T, collapsible = T, uiOutput("tab_fb_registry_above"), column(12,dataTableOutput("fb_registry_table")), uiOutput("tab_fb_registry_below"))),
       #Fin codigo Ivan Perez
       ###
 
@@ -337,7 +338,7 @@ ui <- dashboardPage(
       # fbsites::ui_site(name ="trialSitesTable"),
       #
 
-      eda4plant::edaplant_sbase_ui(name = "edaGraph_sbase"),
+      eda4plant::edaplant_sbase_ui(name = "edaGraph_sbase")#,
 
       #fbanalysis::elston_ui_sbase(name="elstonIndex"),
       #fbanalysis::ui_pvs(name = "singlePVS"),
@@ -352,14 +353,14 @@ ui <- dashboardPage(
 
       #fbanalysis::pbaker_ui(name="pesekIndex"),
 
-      brapps::rts_ui("selResponse"),
-
-      tabItem(tabName = "analysis",
-              h2("Analysis"),
-              p(class = "text-muted",
-                paste("Under construction...")
-              )
-      )
+      # brapps::rts_ui("selResponse"),
+      # 
+      # tabItem(tabName = "analysis",
+      #         h2("Analysis"),
+      #         p(class = "text-muted",
+      #           paste("Under construction...")
+      #         )
+      # )
     ) , #end of TabSetPanel
 
     tags$div(
@@ -386,26 +387,28 @@ ui <- dashboardPage(
 
 sv <- function(input, output, session) ({
 
-  # shinyURL.server()
+   shinyURL.server()
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
   
   
   ################ user session ####################################################################
   
-  source("www/login_module/login.R", local = TRUE)
-  source("www/login_module/ui_login.R", local = TRUE)
+  # source("www/login_module/login.R", local = TRUE)
+  # source("www/login_module/ui_login.R", local = TRUE)
+  # 
+  # session$userData$logged <- F
+  # session$userData$userId <- NULL
+  # session$userData$username <- NULL
+  # session$userData$token <- NULL
+  # session$userData$conn <- NULL
+  # 
+  # USER <- reactiveValues(logged = F, name = NULL, id = NULL, token = NULL, username = NULL)
   
-  session$userData$logged <- F
-  session$userData$userId <- NULL
-  session$userData$username <- NULL
-  session$userData$token <- NULL
-  session$userData$conn <- NULL
-  
-  USER <- reactiveValues(logged = F, name = NULL, id = NULL, token = NULL, username = NULL)
+  # source("www/fbregistry_module/fbregistry.R", local = TRUE)
   
   ##############################################################################################################################
   
-  source("www/fbregistry_module/fbregistry.R", local = TRUE)
+ 
   
 
   withProgress(message = 'Loading HiDAP', value = 0, {
