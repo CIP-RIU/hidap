@@ -144,7 +144,10 @@ ui <- dashboardPage(
                               menuItem("Single Trial Analysis",
                                        
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
+                                       
                                        menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
+                                       
+                                       
                               ),
                               
                               menuItem("PVS Trial Analysis",
@@ -225,15 +228,13 @@ ui <- dashboardPage(
       tabItem(tabName = "sharedFromMe",
               h1("Files shared"),
               DT::dataTableOutput("tabSharedFromMe"),
-              actionButton("btUpdFromMe", "Update table")),
+              actionButton("btUpdFromMe", "Update Table")),
       tabItem(tabName = "shareFile",
               h1("Share a file"),
               selectizeInput("userSelection" ,  width="500px", multiple = TRUE, choices = NULL, label="Select users to share with", options = list(maxOptions = 5 ,  placeholder = 'Select users')),
               DT::dataTableOutput("tabFilesToShare"),
               uiOutput('obsInput'),
-              actionButton("btUpload", "Share"),
-              actionButton("btnUpdUsers", "Refresh table",icon("spinner"))
-              ),
+              actionButton("btUpload", "Share")),
       tabItem(tabName = "login",  div( uiOutput("uiLogin"), uiOutput("pass"), style = 'max-width:700px;' )),
       tabItem(tabName = "logoutTab",div(uiOutput("uiLogout"))),
       tabItem(tabName = "changePass",div(uiOutput("uiChangePass"), uiOutput("mssgChngPass"),style = 'max-width:700px;')),
@@ -519,55 +520,28 @@ sv <- function(input, output, session) ({
     #########end login .R #####################
     
     #myLocalFilesDir <- "./xdata/" # path to folder containing files to share
-    #print("My local Files Dir")
+    print("My local Files Dir")
     myLocalFilesDir <- fbglobal::get_base_dir()
-    #print(myLocalFilesDir)
+    print(myLocalFilesDir)
     #myLocalFilesDir <- file.path(myLocalFilesDir, dbf_file)
-    out_list <- c("fbappdatapath.rds", "potato_db_distribution.rds", "hot_fieldbook.rds" ,"dspotatotrials_dpassport.rds", "dssweettrials_dpassport.rds", "potato_pedigree.rds", "sweetpotato_pedigree.rds", "table_sites.rds")
-    #print(myLocalFilesDir)
-    myLocalFiles_list <- list.files(myLocalFilesDir, pattern = "\\.rds$")
-    #print(myLocalFiles_list)
+    out_list <- c("potato_db_distribution.rds", "hot_fieldbook.rds" ,"dspotatotrials_dpassport.rds", "dssweettrials_dpassport.rds", "potato_pedigree.rds", "sweetpotato_pedigree.rds", "table_sites.rds")
+    print(myLocalFilesDir)
+    myLocalFiles_list <- list.files(list.files(myLocalFilesDir, pattern = "\\.rds$"))
+    print(myLocalFiles_list)
     myLocalFilesDir <- setdiff(myLocalFiles_list, out_list)
-    localFiles <- data.frame(myLocalFilesDir, stringsAsFactors = FALSE)
+    localFiles <- data.frame(myLocalFilesDir)
     names(localFiles)  <- c("File Name")
     allowedCharacters  <- "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.-,()?!*@%&[]{}+=$# "
     allowedCharactersPass  <- "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.-#@?!%&,*;"
     allowedCharactersMail  <- "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.-@+"
     tabSharedWithMe <- NULL
-    #tabMyLocalFiles <- reactive({localFiles})
-    #tabMyLocalFiles <- reactiveValues(react_tabMyLocalFiles = localFiles)
+    tabMyLocalFiles <- reactive({localFiles})
     
-    #values2 <- reactiveValues(localFiles_data = NULL)
-    values2<- reactiveValues(obj2 = NULL)
-    
-    tabMyLocalFiles <- eventReactive( input$btnUpdUsers,{
-
-       myLocalFilesDir <- fbglobal::get_base_dir()
-       out_list <- c("potato_db_distribution.rds", "hot_fieldbook.rds" ,"dspotatotrials_dpassport.rds", "dssweettrials_dpassport.rds", "potato_pedigree.rds", "sweetpotato_pedigree.rds", "table_sites.rds")
-       myLocalFiles_list <- list.files(myLocalFilesDir, pattern = "\\.rds$")
-       myLocalFilesDir <- setdiff(myLocalFiles_list, out_list)
-       localFiles <- data.frame(myLocalFilesDir, stringsAsFactors = FALSE)
-       names(localFiles)  <- c("File Name")
-       print(tabMyLocalFiles)
-       localFiles
-      # res <- list.files(fbglobal::get_base_dir())
-      # print(res)
-      # res <- data.frame(res, stringsAsFactors = FALSE)
-    })
-   
-    observe({
-      values2$obj2 <- tabMyLocalFiles()
-    })
-    
-    
-    
-    output$tabFilesToShare <-  DT::renderDataTable({
-      #server = TRUE
-      #isolate({
+    output$tabFilesToShare = DT::renderDataTable({
+      server = TRUE
+      isolate({
         datatable(
-          values2$obj2,
-          #tabMyLocalFiles(),
-          #values2$localFiles_data,
+          tabMyLocalFiles(),
           class = 'cell-border stripe',
           # extensions = 'FixedColumns',
           options = list(
@@ -575,14 +549,8 @@ sv <- function(input, output, session) ({
             pageLength = 5
           )
         )
-      #})
+      })
     })
-    
-    # observe({
-    #   # input$fbmlist_refresh
-    #   values2$localFiles_data <- tabMyLocalFiles()
-    # })
-    
     
     incProgress(18/25, detail = paste("..."))
     ###########################################################################################################
@@ -805,8 +773,6 @@ sv <- function(input, output, session) ({
       }
       
       filesToShare  <- input$tabFilesToShare_rows_selected
-      print("Files to share")
-      #print(filesToShare)
       
       if (filesToShare < 1 || numUser < 1){
         showModal(modalDialog(title = "HiDAP network", HTML("Users or files are not selected.")))
@@ -826,10 +792,6 @@ sv <- function(input, output, session) ({
       
       for (id in filesToShare) {
         fileName <- tabMyLocalFiles()[id,1]
-        
-        #print("for filename")
-        #print(fileName)
-        
         ranStr <-  stri_rand_strings(1, 15,  '[a-zA-Z0-9]')
         servName = paste(date, ranStr, sep="-")
         
@@ -856,16 +818,10 @@ sv <- function(input, output, session) ({
         
         if(usrIns >  0){
           
-          #print("After for directory")
-          #print(myLocalFilesDir)
-          #print("After for filename")
-          #print(fileName)
+          print(myLocalFilesDir)
+          print(fileName)
+          upd_file <- file.path(myLocalFilesDir, fileName)
           
-          dirPath <- fbglobal::get_base_dir()
-          upd_file <- file.path(dirPath, fileName)
-          #upd_file <- file.path(myLocalFilesDir, fileName)
-          #print("upload file")
-          #print(upd_file)
           
           params <- list(
             dataRequest = "uploadFile",
@@ -886,7 +842,6 @@ sv <- function(input, output, session) ({
             qrydDel = dbSendQuery(mydb, delQry)
           }
         }
-        
       }
       
       updateTextInput(session, "remarks", value = "")
