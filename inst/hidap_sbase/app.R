@@ -45,7 +45,7 @@ library(foreign)
 library(tools)
 library(stringr)
 library(shinyBS)
-#library(fbdesign)
+library(fbdesign) #to load table_module_sweetpotato_sbase
 #library(fbopenbooks)
 library(fbanalysis)
 library(traittools)
@@ -67,7 +67,7 @@ library(rlist)
 library(tibble)
 library(brapi)
 
-#library(fbdesign)
+library(fbdesign) #to load table_module_sweetpotato_sbase
 library(ggplot2)
 #library(st4gi/)
 #library(pepa)
