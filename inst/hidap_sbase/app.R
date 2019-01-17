@@ -67,7 +67,7 @@ library(rlist)
 library(tibble)
 library(brapi)
 
-library(fbdesign)
+#library(fbdesign)
 library(ggplot2)
 #library(st4gi/)
 #library(pepa)
@@ -88,8 +88,6 @@ library(stringi)
 library(shinyURL)
 
 
-print("WD de APP")
-getwd()
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 
@@ -114,8 +112,9 @@ ui <- dashboardPage(
                    br(),
                    div(img(src="hidapicon.png", width = "150px"), style="text-align: center;"),
                    
+                   #--shiny url-----------------
                    shinyURL.ui(display = FALSE),
-                   #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
+                   
                    sidebarMenu(
                      id = "tabs",
                      # menuItem("Phenotype tool", icon = icon("th-list"),
