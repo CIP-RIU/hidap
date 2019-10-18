@@ -20,7 +20,6 @@ params:
   traits: "no data"
   factors: "no data"
   rep: "no data"
-  design: "no data"
   dfr: "no data"
   maxp: "no data"
   title: "no data"
@@ -36,7 +35,6 @@ library(knitr)
 traits <- params$traits
 factors <- params$factors
 rep <- params$rep
-design <- params$design
 dfr <- params$dfr
 maxp <- params$maxp
 

@@ -18,8 +18,10 @@ output:
     toc_depth: 3
 params: 
   traits: "no data"
-  geno: "no data"
+  trt: "no data"
+  trt.lab: "no data"
   rep: "no data"
+  eu: "no data"
   dfr: "no data"
   maxp: "no data"
   title: "no data"
@@ -33,33 +35,45 @@ library(knitr)
 # Pass arguments
 
 traits <- params$traits
-geno <- params$geno
+trt <- params$trt
+trt.lab <- params$trt.lab
+nct <- nchar(trt.lab)
+trt.lab.s <- paste0(trt.lab, "s")
+trt.lab.c <- paste0(toupper(substr(trt.lab, 1, 1)), substr(trt.lab, 2, nct))
+trt.lab.sc <- paste0(toupper(substr(trt.lab, 1, 1)), substr(trt.lab, 2, nct), "s")
 rep <- params$rep
+eu <- params$eu
 dfr <- params$dfr
 maxp <- params$maxp
 
+# Get means if subsamples
+
+if (!is.null(eu)) {
+  dfr2 <- dfr
+  dfr <- docomp("mean", traits, c(trt, eu), rep, dfr)
+}
+
 # Check factors structure
 
-out <- ck.fs(geno, rep, dfr)
-ng <- out$nl[[1]]
+out <- ck.fs(trt, rep, dfr)
+nt <- out$nl[[1]]
 nrep <- out$nrep
 dfr <- out$dfr
 nmis.fac <- out$nmis.fac
-
 
 ```
 
 # 1. Model specification and data description
 
-There are data from `r ng` genotypes evaluated using a randomize complete block design with `r nrep` blocks. The statistical model is
+There are data from `r nt` `r trt.lab.s` evaluated using a randomize complete block design with `r nrep` blocks. The statistical model is
 $$
 y_{ij} = \mu + \tau_i + \beta_j + \epsilon_{ij}
 $$
 where
 
-* $y_{ij}$ is the observed response with genotype $i$ and block $j$.
-* $\mu$ is the mean response over all genotypes and blocks.
-* $\tau_i$ is the effect for genotype $i$.
+* $y_{ij}$ is the observed response with `r trt.lab` $i$ and block $j$.
+* $\mu$ is the mean response over all `r trt.lab.s` and blocks.
+* $\tau_i$ is the effect for `r trt.lab` $i$.
 * $\beta_j$ is the effect for block $j$.
 * $\epsilon_{ij}$ is the error term.
 
@@ -71,7 +85,7 @@ In this model we assume that the errors are independent and have a normal distri
 ```{r include = FALSE}
 out <- NULL
 for (i in 1:length(traits)) {
-  lc <- ck.rcbd(traits[i], geno, rep, dfr)
+  lc <- ck.rcbd(traits[i], trt, rep, dfr)
   if (lc$ng.0 == 0 & lc$nrep > 1 & lc$ng.mult == 0 & lc$pmis <= maxp) {
     out <- c(out, knit_expand('child_rcbd.Rmd'))
   } else {

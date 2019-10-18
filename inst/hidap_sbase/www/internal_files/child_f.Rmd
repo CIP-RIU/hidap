@@ -12,10 +12,10 @@ expr <- paste(traits[i], '~', factors[1])
 for (j in 2:lc$nf)
   expr <- paste(expr, '*', factors[j])
 
-if (design == "crd")
+if (is.null(rep))
   ff <- as.formula(expr)
 
-if (design == "rcbd") {
+if (!is.null(rep)) {
   expr <- paste(expr, '+', rep)
   ff <- as.formula(expr)
 }
@@ -27,14 +27,14 @@ model <- aov(ff, dfr)
 trait.est <- paste0(traits[i], ".est")
 
 if (lc$nmis > 0) {
-  dfr[, trait.est] <- mve.f(traits[i], factors, rep, design, dfr, maxp)[, trait.est]
+  dfr[, trait.est] <- mve.f(traits[i], factors, rep, dfr, maxp)[, trait.est]
 } else {
   dfr[, trait.est] <- dfr[, traits[i]]
 }
 
 # Get anova table with estimated missing values
 
-at <- suppressWarnings(aov.f(traits[i], factors, rep, design, dfr, maxp))
+at <- suppressWarnings(aov.f(traits[i], factors, rep, dfr, maxp))
 
 # CV
 

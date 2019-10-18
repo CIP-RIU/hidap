@@ -3,7 +3,6 @@ library(devtools)
 install_github("jrowen/rhandsontable", ref = "v0.3.1")
 library(shinysky)
 library(data.table)
-library(httr)
 #library(shinyTree)
 
 #library(doBy)
@@ -83,6 +82,12 @@ library(tidyr)
 library(shinyjs) 
 library(shinyalert)
 library(stringi)
+
+library(stringr)
+library(jsonlite)
+library(httr)
+library(readr)
+library(RJSONIO)
 
 #active URL
 library(shinyURL)

@@ -20,7 +20,6 @@ params:
   traits: "no data"
   factors: "no data"
   rep: "no data"
-  design: "no data"
   dfr: "no data"
   maxp: "no data"
   title: "no data"
@@ -36,7 +35,6 @@ library(knitr)
 traits <- params$traits
 factors <- params$factors
 rep <- params$rep
-design <- params$design
 dfr <- params$dfr
 maxp <- params$maxp
 
@@ -58,16 +56,17 @@ text.levels <- paste0(text.levels, ', and ', nl[nf])
 
 # Text for design
 
-if (design == 'crd')
+if (is.null(rep))
   text.design <- 'completely randomized design'
-if (design == 'rcbd')
+if (!is.null(rep))
   text.design <- 'randomized complete block design'
   
 # Everything as character
 
 for (i in 1:nf) 
   dfr[, factors[i]] <- as.character(dfr[, factors[i]])
-dfr[, rep] <- as.character(dfr[, rep])
+if (!is.null(rep))
+  dfr[, rep] <- as.character(dfr[, rep])
 ```
 
 # 1. Model specification and data description
