@@ -108,6 +108,9 @@ library(sp, warn.conflicts=FALSE)
 #active URL
 library(shinyURL, warn.conflicts=FALSE)
 
+#skim
+#library(skimr)
+library(janitor)
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir

@@ -2,3 +2,7 @@
 .right-side {
   background-color: #ffffff;
 }
+
+.sbs-modal > .modal-lg{
+  width: 95%;
+}
