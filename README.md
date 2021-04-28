@@ -18,7 +18,7 @@ If you are developer, and want to run HiDAP from the source code, please install
 
 Apart from these packages, you require download other packages from CRAN to complete the full installation.
 
-*Disclaimer*: *Currently the development of this project is on pause. The main an developers and contributors are working off CIP (but they are still having fun coding on other sites :D ). However, feel free contact them, we would be happy to assit you as long as we can.* 
+*Disclaimer*: *Currently the development of this project is on pause. The main developers and dev-contributors are working off CIP now (but they are still having fun coding on other sites :D ). However, feel free contact them, we would be happy to assit you as long as we can.* 
 
 Of course, HIDAP wouldn't be possible without the effort of the developers, analysts, curators and head leaders. A compilation of the project management as follow:
 
