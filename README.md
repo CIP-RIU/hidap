@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-Repository
+## HIDAP
 
 This repository contains the ui.R and server.R of HiDAP, the Highly Interactive Data Analysis Platform. HIDAP is R-Shiny standalone platform that integrates tha main activities of plant breeders (on potato and sweet potato): *design*, *collect*, *check*, and *analyze/report* experimental data from plant breeding experiments. It uses a web-friendly user interface based on Shiny along with the power of stastical routines implemented in the R stistical language. HIDAP runs without using internet, which is a key functionality on places with low-internet connection. HIDAP currently run in multiple regions around the world such as Latin America, Central America, North America, Africa and in some countries in East-Europe.
 
